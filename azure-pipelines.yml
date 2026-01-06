@@ -1,0 +1,115 @@
+trigger:
+  - main
+  - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  pythonVersion: '3.13'
+  dockerRegistryServiceConnection: 'docker-registry'
+  imageRepository: 'python-api'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build and Test
+  jobs:
+  - job: BuildAndTest
+    displayName: Build and Run Tests
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+      displayName: 'Use Python $(pythonVersion)'
+
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Install dependencies'
+
+    - script: |
+        pip install flake8 pylint
+        flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
+      displayName: 'Lint with flake8'
+      continueOnError: true
+
+    - script: |
+        pytest src/ -v --cov=src/ --cov-report=xml --cov-report=html
+      displayName: 'Run tests with pytest'
+
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/junit/test-results.xml'
+      condition: succeededOrFailed()
+
+- stage: BuildDockerImage
+  displayName: Build Docker Image
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: BuildDocker
+    displayName: Build and Push Docker Image
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        dockerfile: $(dockerfilePath)
+        tags: |
+          $(imageRepository):$(tag)
+          $(imageRepository):latest
+        arguments: '--build-arg PYTHON_VERSION=$(pythonVersion)'
+
+    - task: Docker@2
+      displayName: Push an image to ACR
+      inputs:
+        command: push
+        repository: $(imageRepository)
+        tags: |
+          $(tag)
+          latest
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+
+- stage: Deploy
+  displayName: Deploy to Azure
+  dependsOn: BuildDockerImage
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: DeployApp
+    displayName: Deploy to App Service
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'Azure-Service-Connection'
+              subscriptionId: '$(AZURE_SUBSCRIPTION_ID)'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'python-api-rg'
+              location: 'East US'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Pipeline.Workspace)/drop/azure-deploy.json'
+              csmParametersFile: '$(Pipeline.Workspace)/drop/azure-deploy.parameters.json'
+              deploymentMode: 'Incremental'
+              deploymentOutputs: 'armOutputs'
+
+          - task: AzureAppServiceDeploy@0
+            inputs:
+              azureSubscription: 'Azure-Service-Connection'
+              appType: 'webAppLinux'
+              appName: 'python-api-app'
+              dockerNamespace: 'docker.io'
+              dockerRepository: '$(imageRepository)'
+              dockerImageTag: '$(tag)'
+              startupCommand: 'gunicorn main:app'
