@@ -1,0 +1,64 @@
+[run]
+# Coverage.py configuration file
+
+# Source code to measure coverage for
+source = src
+
+# Paths to omit from coverage measurement
+omit =
+    */tests/*
+    */test_*.py
+    */__pycache__/*
+    */site-packages/*
+    */venv/*
+    */.venv/*
+
+# Code branches to exclude
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abc.abstractmethod
+    pass
+    ...
+    if 0:
+    if False:
+    if not DEBUG:
+
+[report]
+# Coverage reporting options
+
+# Show lines that weren't covered
+show_missing = True
+
+# Minimum coverage percentage required
+fail_under = 75
+
+# Precision for coverage percentage
+precision = 2
+
+# Sort reports by coverage
+sort = Cover
+
+[html]
+# HTML coverage report options
+
+# Directory for HTML coverage report
+directory = htmlcov
+
+[xml]
+# XML coverage report options
+
+# Output file for XML report
+output = coverage.xml
+
+[paths]
+# Path mapping for combining reports from different environments
+
+source =
+    src/
+    */src/

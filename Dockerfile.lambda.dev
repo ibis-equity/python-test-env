@@ -1,0 +1,44 @@
+# Dockerfile for local Lambda testing with API Gateway emulation
+# This image allows testing the Lambda function locally before deployment to AWS
+
+FROM public.ecr.aws/lambda/python:3.11
+
+# Install additional development tools
+RUN yum install -y curl wget git && \
+    yum clean all
+
+# Copy requirements
+COPY src/requirements.txt ${LAMBDA_TASK_ROOT}/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r ${LAMBDA_TASK_ROOT}/requirements.txt && \
+    pip install --no-cache-dir aws-lambda-powertools
+
+# Copy source code
+COPY src/salesforce_api.py ${LAMBDA_TASK_ROOT}/
+COPY src/aws_salesforce_lambda.py ${LAMBDA_TASK_ROOT}/
+
+# Add Lambda RIC (Runtime Interface Client)
+RUN pip install --no-cache-dir awslambdaric
+
+# Create a simple entrypoint script for local testing
+RUN echo '#!/bin/bash\n\
+if [ -z "$AWS_LAMBDA_FUNCTION_NAME" ]; then\n\
+  # Local testing mode - start Lambda RIC\n\
+  exec /lambda-entrypoint.sh aws_salesforce_lambda.router\n\
+else\n\
+  # AWS Lambda environment - use standard handler\n\
+  exec /lambda-entrypoint.sh aws_salesforce_lambda.router\n\
+fi' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/health 2>/dev/null || exit 1
+
+# Expose port for Lambda RIC
+EXPOSE 8080
+
+# Set the handler
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "aws_salesforce_lambda.router" ]

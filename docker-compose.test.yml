@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: fastapi-test-runner
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=test
+    volumes:
+      - ./src:/app/src
+      - ./sample_data.csv:/app/sample_data.csv
+      - ./test-results:/app/test-results
+    working_dir: /app
+    command: pytest src/ -v --cov=src --cov-report=html:/app/test-results/coverage --cov-report=xml:/app/test-results/coverage.xml --cov-report=term-missing
+
+  # Service for running specific test files
+  test-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: fastapi-test-integration
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=test
+    volumes:
+      - ./src:/app/src
+      - ./sample_data.csv:/app/sample_data.csv
+      - ./test-results:/app/test-results
+    working_dir: /app
+    command: pytest src/test_fast_api.py -v
+    profiles:
+      - integration
+
+  # Service for running performance/load tests
+  test-performance:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: fastapi-test-performance
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=test
+    volumes:
+      - ./src:/app/src
+      - ./sample_data.csv:/app/sample_data.csv
+      - ./test-results:/app/test-results
+    working_dir: /app
+    command: python -c "import sys; sys.path.insert(0, '/app'); from tests.test_performance import test_concurrent_creates, test_get_performance; test_concurrent_creates(); test_get_performance()"
+    profiles:
+      - performance
+
+  # Service for running with sample data validation
+  test-sample-data:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: fastapi-test-sample-data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=test
+    volumes:
+      - ./src:/app/src
+      - ./sample_data.csv:/app/sample_data.csv
+      - ./test-results:/app/test-results
+    working_dir: /app
+    command: pytest src/ -v -k "sample" --cov=src --cov-report=html:/app/test-results/sample-coverage
+    profiles:
+      - sample

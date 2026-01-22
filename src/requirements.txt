@@ -1,7 +1,7 @@
-fastapi==0.104.1
-uvicorn==0.24.0
-pydantic==2.5.0
-boto3==1.28.85
+fastapi==0.128.0
+uvicorn==0.40.0
+pydantic==2.12.5
+boto3==1.33.0
 pytest==7.4.3
 pandas==2.1.3
 pyarrow==13.0.0
@@ -15,3 +15,12 @@ azure-cosmos==4.5.1
 azure-keyvault-secrets==4.7.0
 azure-monitor-opentelemetry==1.0.1
 python-dotenv==1.0.0
+httpx==0.25.2
+salesforce-bulk==2.3.0
+simple-salesforce==1.12.5
+snowflake-connector-python==3.5.0
+pyspark==3.5.0
+kafka-python==2.0.2
+cx-Oracle==8.3.0
+sqlalchemy==1.4.48
+mangum==0.17.0

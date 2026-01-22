@@ -1,0 +1,50 @@
+# ==================== TERRAFORM CONFIGURATION ====================
+# FastAPI Python API Deployment to AWS Lambda
+# Copy this file to terraform.tfvars and update with your values
+# DO NOT commit terraform.tfvars with sensitive data to version control
+
+# ==================== AWS Configuration ====================
+aws_region   = "us-east-1"             # AWS region for deployment
+project_name = "python-api"            # Project name for resource tagging
+environment  = "dev"                   # Environment: dev, staging, prod
+function_name = "python-api-lambda"    # Lambda function name
+
+# ==================== Lambda Configuration ====================
+lambda_runtime    = "python3.11"       # Python version (3.11 recommended)
+lambda_timeout    = 30                 # Timeout in seconds (1-900)
+lambda_memory     = 512                # Memory in MB (128-10240)
+lambda_source_dir = "../src"           # Path to src/ directory with code
+
+# Lambda handler using Mangum ASGI adapter for FastAPI
+lambda_handler = "fast_api.lambda_handler"
+
+# ==================== API Gateway Configuration ====================
+api_stage_name     = "dev"             # Stage name (dev, prod, etc)
+cors_allow_origins = ["*"]             # Change to specific domains for production
+
+# ==================== Logging Configuration ====================
+log_retention_days = 7                 # CloudWatch log retention (days)
+log_level          = "INFO"            # Log level: DEBUG, INFO, WARNING, ERROR
+
+# ==================== CloudWatch Alarms ====================
+error_threshold    = 5                 # Errors in 5-minute period to trigger alarm
+duration_threshold = 25000             # Duration (ms) to trigger alarm
+
+# ==================== Environment Variables ====================
+# Passed to Lambda function as environment variables
+# Useful for configuration without code changes
+environment_variables = {
+  SALESFORCE_INSTANCE_URL  = ""
+  SALESFORCE_CLIENT_ID     = ""
+  SALESFORCE_CLIENT_SECRET = ""
+  SALESFORCE_USERNAME      = ""
+  SALESFORCE_PASSWORD      = ""
+}
+
+# ==================== Tags ====================
+tags = {
+  Owner       = "Your Name"            # Change to your name
+  CostCenter  = "Engineering"          # Your cost center
+  Application = "python-api"           # Application identifier
+  ManagedBy   = "Terraform"            # Resource management tool
+}

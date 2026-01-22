@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # AWS Lambda local emulation
+  salesforce-lambda:
+    build:
+      context: .
+      dockerfile: Dockerfile.lambda.dev
+    container_name: salesforce-lambda
+    ports:
+      - "8080:8080"
+    environment:
+      # Salesforce Configuration
+      SALESFORCE_INSTANCE_URL: ${SALESFORCE_INSTANCE_URL:-https://your-instance.salesforce.com}
+      SALESFORCE_CLIENT_ID: ${SALESFORCE_CLIENT_ID:-your_client_id}
+      SALESFORCE_CLIENT_SECRET: ${SALESFORCE_CLIENT_SECRET:-your_client_secret}
+      SALESFORCE_USERNAME: ${SALESFORCE_USERNAME:-your_username@example.com}
+      SALESFORCE_PASSWORD: ${SALESFORCE_PASSWORD:-your_password}
+      SALESFORCE_SECURITY_TOKEN: ${SALESFORCE_SECURITY_TOKEN:-}
+      
+      # Lambda Configuration
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      AWS_LAMBDA_FUNCTION_NAME: salesforce-api
+      AWS_DEFAULT_REGION: ${AWS_REGION:-us-east-1}
+    volumes:
+      # Mount source code for hot reload during development
+      - ./src:/var/task:ro
+    networks:
+      - salesforce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health", "||", "exit", "1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+  # API Gateway emulation (optional - for testing)
+  api-gateway:
+    image: localstack/localstack:latest
+    container_name: salesforce-api-gateway
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=apigateway,lambda
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    volumes:
+      - "${TMPDIR}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - salesforce-network
+    restart: unless-stopped
+
+  # Monitoring with Prometheus (optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: salesforce-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - salesforce-network
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+  # Grafana for visualization (optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: salesforce-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - salesforce-network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+networks:
+  salesforce-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:

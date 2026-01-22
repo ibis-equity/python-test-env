@@ -2,6 +2,14 @@ from fastapi import FastAPI, Query, Path
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional
+import os
+import json
+import logging
+from mangum import Mangum
+
+# Configure logging for AWS Lambda and local development
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 # Define request/response models for better documentation
 class Item(BaseModel):
@@ -186,6 +194,32 @@ async def health_check() -> HealthResponse:
     Use this endpoint to verify the API is running and responsive.
     """
     return HealthResponse(status="healthy", version="1.0.0")
+
+
+@app.get(
+    "/api/aws-info",
+    response_model=dict,
+    tags=["AWS"],
+    summary="Get AWS environment info",
+    description="Returns AWS Lambda environment information when running in Lambda"
+)
+async def get_aws_info():
+    """
+    Get AWS Lambda environment information.
+    
+    Returns:
+        dict: AWS environment details including function name, region, and environment type
+    """
+    return {
+        "lambda_function_name": os.getenv("AWS_LAMBDA_FUNCTION_NAME", "local"),
+        "aws_region": os.getenv("AWS_REGION", "us-east-1"),
+        "environment": "aws" if os.getenv("AWS_LAMBDA_FUNCTION_NAME") else "local",
+        "lambda_version": os.getenv("AWS_LAMBDA_FUNCTION_VERSION", "N/A")
+    }
+
+
+# AWS Lambda handler wrapper - translates API Gateway events to ASGI
+lambda_handler = Mangum(app, lifespan="off")
 
 
 if __name__ == "__main__":

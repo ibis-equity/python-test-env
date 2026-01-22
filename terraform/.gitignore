@@ -1,0 +1,49 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Environment files (sensitive data)
+terraform.tfvars
+!terraform.tfvars.example
+
+# Build artifacts
+.lambda_build/
+*.zip
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Sensitive files
+.env
+.env.local
+*.pem
+*.key

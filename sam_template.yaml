@@ -1,0 +1,285 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2.0
+Description: FastAPI Application deployed to AWS Lambda with API Gateway
+
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 512
+    Runtime: python3.11
+    Environment:
+      Variables:
+        PYTHONPATH: /var/task
+        AWS_REGION: !Ref AWS::Region
+        LOG_LEVEL: INFO
+    Tracing: Active
+  Api:
+    TracingEnabled: true
+
+Parameters:
+  StageName:
+    Type: String
+    Default: prod
+    Description: API Gateway stage name
+
+Resources:
+  # IAM Role for Lambda function
+  FastAPILambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+      Policies:
+        - PolicyName: CloudWatchLogs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
+
+  # Lambda Layer for dependencies
+  DependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: fastapi-dependencies-layer
+      Description: FastAPI and dependencies layer
+      ContentUri: s3://BUCKET_NAME/layer.zip  # Replace with your S3 bucket
+      CompatibleRuntimes:
+        - python3.11
+
+  # Lambda Function
+  FastAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: fastapi-app
+      CodeUri: .
+      Handler: src.fast_api.lambda_handler
+      Runtime: python3.11
+      MemorySize: 512
+      Timeout: 60
+      Role: !GetAtt FastAPILambdaRole.Arn
+      Layers:
+        - !Ref DependenciesLayer
+      Environment:
+        Variables:
+          AWS_LAMBDA_FUNCTION_NAME: fastapi-app
+          ENVIRONMENT: production
+      Events:
+        # Catch all proxy integration for root path
+        RootEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Method: ANY
+            Path: /
+        # Catch all proxy integration for all paths
+        ProxyEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Method: ANY
+            Path: /{proxy+}
+      LoggingConfig:
+        LogFormat: JSON
+        ApplicationLogLevelCloudWatch: INFO
+      EphemeralStorage: 512
+      VpcConfig:
+        # Optional: Configure VPC settings if needed
+        # SecurityGroupIds:
+        #   - sg-xxxxxx
+        # SubnetIds:
+        #   - subnet-xxxxxx
+        #   - subnet-yyyyyy
+
+  # API Gateway
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: fastapi-api
+      Description: FastAPI REST API Gateway
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  # API Gateway Resource (proxy)
+  ApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: '{proxy+}'
+
+  # API Gateway Method
+  ApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ResourceId: !Ref ApiResource
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FastAPIFunction.Arn}/invocations'
+
+  # API Gateway Root Method
+  ApiRootMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ResourceId: !GetAtt ApiGateway.RootResourceId
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FastAPIFunction.Arn}/invocations'
+
+  # Lambda Permission for API Gateway
+  ApiInvokeLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref FastAPIFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*'
+
+  # API Gateway Deployment
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - ApiMethod
+      - ApiRootMethod
+    Properties:
+      RestApiId: !Ref ApiGateway
+      StageName: !Ref StageName
+
+  # CloudWatch Log Group
+  FastAPILogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${FastAPIFunction}'
+      RetentionInDays: 7
+
+  # CloudWatch Alarms
+  LambdaErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: fastapi-lambda-errors
+      AlarmDescription: Alert when Lambda function has errors
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref FastAPIFunction
+
+  LambdaDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: fastapi-lambda-duration
+      AlarmDescription: Alert when Lambda duration is high
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 30000  # 30 seconds in milliseconds
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref FastAPIFunction
+
+  # CloudWatch Dashboard
+  FastAPIMonitoringDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: fastapi-monitoring
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric",
+              "properties": {
+                "metrics": [
+                  ["AWS/Lambda", "Invocations", {"stat": "Sum"}],
+                  [".", "Errors", {"stat": "Sum"}],
+                  [".", "Duration", {"stat": "Average"}],
+                  [".", "Throttles", {"stat": "Sum"}],
+                  [".", "ConcurrentExecutions", {"stat": "Maximum"}]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "FastAPI Lambda Metrics",
+                "dimensions": {
+                  "FunctionName": "${FastAPIFunction}"
+                }
+              }
+            },
+            {
+              "type": "log",
+              "properties": {
+                "query": "fields @timestamp, @message, @duration, @memoryUsed | stats avg(@duration), avg(@memoryUsed), count() by bin(5m)",
+                "region": "${AWS::Region}",
+                "title": "Performance Analytics"
+              }
+            }
+          ]
+        }
+
+Outputs:
+  FastAPIFunctionArn:
+    Description: FastAPI Lambda Function ARN
+    Value: !GetAtt FastAPIFunction.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-FunctionArn'
+
+  FastAPIFunctionName:
+    Description: FastAPI Lambda Function Name
+    Value: !Ref FastAPIFunction
+    Export:
+      Name: !Sub '${AWS::StackName}-FunctionName'
+
+  ApiGatewayEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${StageName}'
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiEndpoint'
+
+  ApiGatewayId:
+    Description: API Gateway ID
+    Value: !Ref ApiGateway
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiGatewayId'
+
+  SwaggerUIUrl:
+    Description: Swagger UI URL
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/docs'
+
+  ReDocUrl:
+    Description: ReDoc URL
+    Value: !Sub 'https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/redoc'
+
+  LogGroupName:
+    Description: CloudWatch Log Group Name
+    Value: !Ref FastAPILogGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-LogGroup'
