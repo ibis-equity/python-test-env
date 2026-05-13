@@ -11,16 +11,18 @@ This module provides comprehensive functionality for:
 
 import logging
 import os
+import sys
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime, timedelta
 import json
 from functools import wraps
 from pyspark.sql import SparkSession, DataFrame, Window
+from pyspark.sql import functions as F
 from pyspark.sql.functions import (
     col, when, concat_ws, row_number, dense_rank, 
     sum as spark_sum, count, avg, min, max,
     lower, upper, trim, length,
-    year, month, day, date_format, to_date,
+    year, month, dayofmonth, date_format, to_date,
     explode, arrays_zip, flatten
 )
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, TimestampType
@@ -467,20 +469,20 @@ class AWSSparkRoutine:
             logger.info(f"Grouping by {group_cols} with aggregations {agg_dict}")
             
             # Build aggregation expressions
-            agg_exprs = {}
-            for col_name, agg_func in agg_dict.items():
-                if agg_func.lower() == "sum":
-                    agg_exprs[col_name] = "sum"
-                elif agg_func.lower() == "avg":
-                    agg_exprs[col_name] = "avg"
-                elif agg_func.lower() == "count":
-                    agg_exprs[col_name] = "count"
-                elif agg_func.lower() == "min":
-                    agg_exprs[col_name] = "min"
-                elif agg_func.lower() == "max":
-                    agg_exprs[col_name] = "max"
-            
-            result_df = df.groupBy(group_cols).agg(agg_exprs)
+            agg_map = {
+                "sum": F.sum,
+                "avg": F.avg,
+                "count": F.count,
+                "min": F.min,
+                "max": F.max,
+            }
+            agg_exprs = [
+                agg_map[agg_func.lower()](col_name).alias(f"{agg_func.lower()}_{col_name}")
+                for col_name, agg_func in agg_dict.items()
+                if agg_func.lower() in agg_map
+            ]
+
+            result_df = df.groupBy(group_cols).agg(*agg_exprs)
             logger.info(f"Aggregation complete: {result_df.count()} groups")
             return result_df
         except Exception as e:
@@ -595,7 +597,7 @@ class AWSSparkRoutine:
                 elif fmt.lower() == "month":
                     result_df = result_df.withColumn("month", month(col(date_column)))
                 elif fmt.lower() == "day":
-                    result_df = result_df.withColumn("day", day(col(date_column)))
+                    result_df = result_df.withColumn("day", dayofmonth(col(date_column)))
                 elif fmt.lower() == "quarter":
                     result_df = result_df.withColumn(
                         "quarter",
