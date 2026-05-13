@@ -470,6 +470,24 @@ class TestAwsInfoEndpoint:
         
         assert all(isinstance(v, str) for v in data.values())
 
+    def test_aws_info_lambda_environment(self, client, monkeypatch):
+        """
+        Test: AWS info endpoint in Lambda environment
+        Expected: Environment info reflects Lambda env vars
+        """
+        monkeypatch.setenv("AWS_LAMBDA_FUNCTION_NAME", "unit-test-lambda")
+        monkeypatch.setenv("AWS_REGION", "eu-west-1")
+        monkeypatch.setenv("AWS_LAMBDA_FUNCTION_VERSION", "7")
+
+        response = client.get("/api/aws-info")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["lambda_function_name"] == "unit-test-lambda"
+        assert data["aws_region"] == "eu-west-1"
+        assert data["environment"] == "aws"
+        assert data["lambda_version"] == "7"
+
 
 class TestContentTypes:
     """Test suite for content type handling"""
