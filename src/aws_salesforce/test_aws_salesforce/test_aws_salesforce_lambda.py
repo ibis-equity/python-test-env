@@ -6,7 +6,7 @@ Tests all handlers, routing, and error handling
 import pytest
 import json
 from unittest.mock import MagicMock, AsyncMock, patch
-from aws_salesforce_lambda import (
+from aws_salesforce.aws_salesforce_lambda import (
     LambdaResponse,
     create_account_handler,
     get_account_handler,

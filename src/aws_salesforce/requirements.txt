@@ -24,3 +24,5 @@ kafka-python==2.0.2
 cx-Oracle==8.3.0
 sqlalchemy==1.4.48
 mangum==0.17.0
+structlog==24.1.0
+oracledb==2.4.0
