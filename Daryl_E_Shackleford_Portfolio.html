@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Daryl E. Shackleford – Professional Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: { DEFAULT: '#0a0f1e', surface: '#111827', elevated: '#1a2235' },
+                        accent: { blue: '#3b82f6', cyan: '#06b6d4', purple: '#8b5cf6' },
+                        txt: { primary: '#f1f5f9', muted: '#94a3b8', dim: '#64748b' },
+                        border: { DEFAULT: '#1e2d45' }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #0a0f1e;
+            --surface: #111827;
+            --elevated: #1a2235;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #1e2d45;
+            --glow-blue: rgba(59,130,246,0.35);
+            --glow-cyan: rgba(6,182,212,0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text-primary); overflow-x: hidden; }
+
+        /* Animated gradient mesh hero bg */
+        .hero-gradient {
+            position: absolute; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 30%, rgba(59,130,246,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 80% 70%, rgba(6,182,212,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 90% 70% at 50% 50%, rgba(139,92,246,0.08) 0%, transparent 70%);
+            animation: meshShift 12s ease-in-out infinite alternate;
+        }
+        @keyframes meshShift {
+            0% { background-position: 0% 0%, 100% 100%, 50% 50%; opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { background-position: 100% 100%, 0% 0%, 50% 50%; opacity: 1; }
+        }
+
+        /* Typewriter */
+        .typewriter-cursor { animation: blink 0.7s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Floating badges */
+        .float-badge { animation: floatBadge 6s ease-in-out infinite; }
+        .float-badge:nth-child(2) { animation-delay: -1s; animation-duration: 7s; }
+        .float-badge:nth-child(3) { animation-delay: -2s; animation-duration: 5.5s; }
+        .float-badge:nth-child(4) { animation-delay: -3s; animation-duration: 8s; }
+        .float-badge:nth-child(5) { animation-delay: -0.5s; animation-duration: 6.5s; }
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.35; }
+            25% { transform: translateY(-18px) translateX(8px); opacity: 0.5; }
+            50% { transform: translateY(-8px) translateX(-6px); opacity: 0.3; }
+            75% { transform: translateY(-22px) translateX(4px); opacity: 0.45; }
+        }
+
+        /* Section fade in */
+        .section-reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .section-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Nav link underline animation */
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+        /* Card glow on hover */
+        .card-glow { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-glow:hover { transform: translateY(-6px); box-shadow: 0 0 30px var(--glow-blue); }
+
+        /* Gradient text */
+        .gradient-text { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        /* Gradient border */
+        .gradient-border { position: relative; }
+        .gradient-border::before {
+            content: ''; position: absolute; inset: -2px; border-radius: inherit;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            z-index: -1;
+        }
+
+        /* Skill bar animation */
+        .skill-bar-fill { width: 0; transition: width 1s ease-in-out; }
+        .skill-bar-fill.animate { width: var(--fill); }
+
+        /* Timeline line */
+        .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple)); transform: translateX(-50%); }
+        @media (max-width: 767px) { .timeline-line { left: 20px; } }
+
+        /* Timeline dot */
+        .timeline-dot {
+            width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--accent-blue);
+            background: var(--bg); position: absolute; left: 50%; top: 28px; transform: translateX(-50%); z-index: 2;
+        }
+        @media (max-width: 767px) { .timeline-dot { left: 20px; } }
+
+        /* Expand collapse */
+        .expandable-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+        .expandable-content.expanded { max-height: 600px; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+
+        /* Cert card glow */
+        .cert-card { border: 1px solid transparent; background-clip: padding-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .cert-card:hover { border-color: rgba(59,130,246,0.5); box-shadow: 0 0 24px var(--glow-blue); }
+
+        /* Avatar ring */
+        .avatar-ring {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            padding: 4px; border-radius: 50%;
+        }
+
+        /* Back to top */
+        .back-to-top { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .back-to-top.show { opacity: 1; pointer-events: auto; }
+    </style>
+</head>
+<body data-id="0" class="font-inter">
+    <app-icon data-id="1" hidden data-icon="database" data-palette="Dark"></app-icon>
+
+    <!-- FIXED NAVIGATION -->
+    <nav data-id="2" id="navbar-x9k2" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background: rgba(10,15,30,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <div data-id="3" class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-between h-16">
+            <a data-id="4" href="#hero-s1a0" class="text-2xl font-black gradient-text tracking-tight">DES</a>
+            <div data-id="5" class="hidden md:flex items-center gap-8">
+                <a data-id="6" href="#about-q3r8" class="nav-link text-sm font-medium text-txt-muted hover:text-txt-primary transition-colors" data-nav="about-q3r8">About</a>
+                <a data-id="7" href="#experience-t7m1" class="nav-link text-sm font-medium text-txt-muted hover:text-txt-primary transition-colors" data-nav="experience-t7m1">Experience</a>
+                <a data-id="8" href="#skills-u4p2" class="nav-link text-sm font-medium text-txt-muted hover:text-txt-primary transition-colors" data-nav="skills-u4p2">Skills</a>
+                <a data-id="9" href="#projects-v6n3" class="nav-link text-sm font-medium text-txt-muted hover:text-txt-primary transition-colors" data-nav="projects-v6n3">Projects</a>
+                <a data-id="10" href="#certs-w8k4" class="nav-link text-sm font-medium text-txt-muted hover:text-txt-primary transition-colors" data-nav="certs-w8k4">Certifications</a>
+                <a data-id="11" href="#contact-y2j5" class="nav-link text-sm font-medium text-txt-muted hover:text-txt-primary transition-colors" data-nav="contact-y2j5">Contact</a>
+            </div>
+            <button data-id="12" id="mobile-menu-btn-z1q6" class="md:hidden p-2 text-txt-muted hover:text-txt-primary" aria-label="Open menu">
+                <i data-id="13" data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div data-id="14" id="mobile-menu-a3w7" class="hidden fixed inset-0 z-[60] flex flex-col" style="background: rgba(10,15,30,0.98); backdrop-filter: blur(16px);">
+        <div data-id="15" class="flex items-center justify-between px-4 h-16">
+            <span data-id="16" class="text-2xl font-black gradient-text tracking-tight">DES</span>
+            <button data-id="17" id="mobile-menu-close-b4e8" class="p-2 text-txt-muted hover:text-txt-primary" aria-label="Close menu">
+                <i data-id="18" data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div data-id="19" class="flex flex-col items-center justify-center flex-1 gap-8">
+            <a data-id="20" href="#about-q3r8" class="mobile-nav-link text-xl font-semibold text-txt-muted hover:text-txt-primary transition-colors">About</a>
+            <a data-id="21" href="#experience-t7m1" class="mobile-nav-link text-xl font-semibold text-txt-muted hover:text-txt-primary transition-colors">Experience</a>
+            <a data-id="22" href="#skills-u4p2" class="mobile-nav-link text-xl font-semibold text-txt-muted hover:text-txt-primary transition-colors">Skills</a>
+            <a data-id="23" href="#projects-v6n3" class="mobile-nav-link text-xl font-semibold text-txt-muted hover:text-txt-primary transition-colors">Projects</a>
+            <a data-id="24" href="#certs-w8k4" class="mobile-nav-link text-xl font-semibold text-txt-muted hover:text-txt-primary transition-colors">Certifications</a>
+            <a data-id="25" href="#contact-y2j5" class="mobile-nav-link text-xl font-semibold text-txt-muted hover:text-txt-primary transition-colors">Contact</a>
+        </div>
+    </div>
+
+    <main data-id="26">
+        <!-- HERO SECTION -->
+        <section data-id="27" id="hero-s1a0" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+            <div data-id="28" class="hero-gradient"></div>
+            <!-- Floating tech badges -->
+            <div data-id="29" class="absolute inset-0 pointer-events-none overflow-hidden">
+                <span data-id="30" class="float-badge absolute top-[15%] left-[10%] text-xs font-medium px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue border border-accent-blue/20">Python</span>
+                <span data-id="31" class="float-badge absolute top-[25%] right-[12%] text-xs font-medium px-3 py-1 rounded-full bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">PyTorch</span>
+                <span data-id="32" class="float-badge absolute bottom-[30%] left-[18%] text-xs font-medium px-3 py-1 rounded-full bg-accent-purple/10 text-accent-purple border border-accent-purple/20">AWS</span>
+                <span data-id="33" class="float-badge absolute top-[40%] right-[22%] text-xs font-medium px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue border border-accent-blue/20">Databricks</span>
+                <span data-id="34" class="float-badge absolute bottom-[22%] right-[8%] text-xs font-medium px-3 py-1 rounded-full bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">LangChain</span>
+            </div>
+            <div data-id="35" class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+                <h1 data-id="36" id="hero-name-c5f9" class="text-4xl md:text-6xl lg:text-7xl font-black mb-4 tracking-tight">
+                    Daryl E. <span data-id="37" class="gradient-text">Shackleford</span>
+                </h1>
+                <div data-id="38" class="h-10 md:h-12 flex items-center justify-center mb-6">
+                    <span data-id="39" id="typewriter-d6g0" class="text-lg md:text-2xl font-semibold text-accent-cyan"></span>
+                    <span data-id="40" class="typewriter-cursor text-accent-cyan text-lg md:text-2xl font-light ml-0.5">|</span>
+                </div>
+                <p data-id="41" id="hero-sub-e7h1" class="text-base md:text-lg text-txt-muted max-w-2xl mx-auto mb-8 leading-relaxed">
+                    Architecting intelligent, cloud-native data platforms that power AI-ready enterprises.
+                </p>
+                <div data-id="42" class="flex items-center justify-center gap-2 mb-10">
+                    <span data-id="43" class="text-sm text-txt-muted bg-bg-elevated px-3 py-1.5 rounded-full border border-border">📍 Charlotte, NC</span>
+                </div>
+                <div data-id="44" class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a data-id="45" href="#contact-y2j5" id="cta-resume-f8i2" class="inline-flex items-center gap-2 px-7 py-3 rounded-lg font-semibold text-sm text-white transition-all duration-300 hover:shadow-lg hover:shadow-accent-blue/30" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+                        <i data-id="46" data-lucide="download" class="w-4 h-4"></i> Download Resume
+                    </a>
+                    <a data-id="47" href="#contact-y2j5" id="cta-contact-g9j3" class="inline-flex items-center gap-2 px-7 py-3 rounded-lg font-semibold text-sm border border-accent-blue text-accent-blue hover:bg-accent-blue/10 transition-all duration-300">
+                        <i data-id="48" data-lucide="mail" class="w-4 h-4"></i> Get In Touch
+                    </a>
+                </div>
+            </div>
+            <div data-id="49" class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+                <i data-id="50" data-lucide="chevron-down" class="w-6 h-6 text-txt-dim"></i>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section data-id="51" id="about-q3r8" class="py-20 md:py-28 section-reveal">
+            <div data-id="52" class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+                <h2 data-id="53" id="about-title-h0k4" class="text-3xl md:text-4xl font-bold text-center mb-16">About <span data-id="54" class="gradient-text">Me</span></h2>
+                <div data-id="55" class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                    <!-- Avatar -->
+                    <div data-id="56" class="flex-shrink-0">
+                        <div data-id="57" class="avatar-ring w-48 h-48 md:w-56 md:h-56">
+                            <div data-id="58" class="w-full h-full rounded-full bg-bg-surface flex items-center justify-center">
+                                <span data-id="59" class="text-5xl md:text-6xl font-black gradient-text">DES</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bio -->
+                    <div data-id="60" class="flex-1">
+                        <p data-id="61" id="bio-p1-i1l5" class="text-txt-muted leading-relaxed mb-5">
+                            With over 17 years of experience at the intersection of data engineering, cloud infrastructure, and artificial intelligence, I design and deliver production-grade platforms that turn raw data into enterprise intelligence. My work spans regulated industries — utilities, finance, and legal tech — where data quality, governance, and security are non-negotiable.
+                        </p>
+                        <p data-id="62" id="bio-p2-j2m6" class="text-txt-muted leading-relaxed mb-5">
+                            I specialize in building cloud-native data platforms from the ground up: architecting Delta Lake and Databricks pipelines, engineering RAG systems with AWS Bedrock and OpenSearch vector search, and deploying PyTorch-based ML models into real-time FastAPI microservices. I bring equal fluency to the infrastructure layer — Terraform, Kubernetes, CI/CD — and the AI application layer.
+                        </p>
+                        <p data-id="63" id="bio-p3-k3n7" class="text-txt-muted leading-relaxed">
+                            Beyond the technical, I'm a builder of teams. I've led engineering orgs, mentored junior engineers into senior roles, participated in hiring cycles, managed cross-functional stakeholder relationships, and translated complex architecture into business value.
+                        </p>
+                    </div>
+                </div>
+                <!-- Stats -->
+                <div data-id="64" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-14">
+                    <div data-id="65" id="stat-1-l4o8" class="bg-bg-surface border border-border rounded-xl p-6 text-center card-glow">
+                        <div data-id="66" class="text-3xl md:text-4xl font-black gradient-text mb-1">17+</div>
+                        <div data-id="67" class="text-sm text-txt-muted">Years Experience</div>
+                    </div>
+                    <div data-id="68" id="stat-2-m5p9" class="bg-bg-surface border border-border rounded-xl p-6 text-center card-glow">
+                        <div data-id="69" class="text-3xl md:text-4xl font-black gradient-text mb-1">3</div>
+                        <div data-id="70" class="text-sm text-txt-muted">Industries Served</div>
+                    </div>
+                    <div data-id="71" id="stat-3-n6q0" class="bg-bg-surface border border-border rounded-xl p-6 text-center card-glow">
+                        <div data-id="72" class="text-3xl md:text-4xl font-black gradient-text mb-1">2</div>
+                        <div data-id="73" class="text-sm text-txt-muted">AWS Certifications</div>
+                    </div>
+                    <div data-id="74" id="stat-4-o7r1" class="bg-bg-surface border border-border rounded-xl p-6 text-center card-glow">
+                        <div data-id="75" class="text-3xl md:text-4xl font-black gradient-text mb-1">∞</div>
+                        <div data-id="76" class="text-sm text-txt-muted">Data Pipelines Shipped</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE TIMELINE -->
+        <section data-id="77" id="experience-t7m1" class="py-20 md:py-28 section-reveal">
+            <div data-id="78" class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+                <h2 data-id="79" id="exp-title-p8s2" class="text-3xl md:text-4xl font-bold text-center mb-16">Career <span data-id="80" class="gradient-text">Journey</span></h2>
+                <div data-id="81" class="relative">
+                    <div data-id="82" class="timeline-line hidden md:block"></div>
+
+                    <!-- Entry 1 -->
+                    <div data-id="83" class="relative mb-12 md:mb-16 md:flex md:items-start" data-timeline="right">
+                        <div data-id="84" class="timeline-dot hidden md:block" style="border-color: var(--accent-cyan);"></div>
+                        <div data-id="85" class="md:w-1/2 md:ml-auto md:pl-12 pl-12 md:pl-12 relative">
+                            <div data-id="86" class="absolute left-0 top-7 w-4 h-4 rounded-full border-[3px] bg-bg md:hidden" style="border-color: var(--accent-cyan); left: 12px;"></div>
+                            <div data-id="87" id="exp-card-1-q9t3" class="bg-bg-surface border border-border rounded-xl p-6 card-glow">
+                                <div data-id="88" class="flex items-center gap-3 mb-3">
+                                    <div data-id="89" class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(6,182,212,0.15);">
+                                        <i data-id="90" data-lucide="terminal" class="w-5 h-5 text-accent-cyan"></i>
+                                    </div>
+                                    <div data-id="91">
+                                        <span data-id="92" class="text-xs font-semibold px-2.5 py-0.5 rounded-full" style="background: rgba(6,182,212,0.15); color: var(--accent-cyan);">2026 – Present</span>
+                                    </div>
+                                </div>
+                                <h3 data-id="93" class="text-lg font-bold text-txt-primary mb-1">Lead Software Engineer / Full-Stack AI Developer</h3>
+                                <p data-id="94" class="text-sm text-accent-cyan font-medium mb-1">Ibis Equity AI Platform</p>
+                                <p data-id="95" class="text-xs text-txt-dim mb-4 flex items-center gap-1"><i data-id="96" data-lucide="map-pin" class="w-3 h-3"></i> Remote</p>
+                                <ul data-id="97" class="space-y-2 text-sm text-txt-muted mb-3">
+                                    <li data-id="98" class="flex gap-2"><span data-id="99" class="text-accent-cyan mt-1 flex-shrink-0">▹</span> Built the Ibis Equity AI Platform end-to-end: Angular 21/TypeScript frontend, FastAPI backend, AWS Bedrock LLM integration</li>
+                                    <li data-id="100" class="flex gap-2"><span data-id="101" class="text-accent-cyan mt-1 flex-shrink-0">▹</span> Designed multi-source RAG architecture enabling semantic search over financial document corpora</li>
+                                    <li data-id="102" class="flex gap-2"><span data-id="103" class="text-accent-cyan mt-1 flex-shrink-0">▹</span> Engineered vector embedding pipelines in AWS OpenSearch with sub-200ms retrieval latency</li>
+                                </ul>
+                                <div data-id="104" id="expand-1-r0u4" class="expandable-content">
+                                    <ul data-id="105" class="space-y-2 text-sm text-txt-muted mb-3">
+                                        <li data-id="106" class="flex gap-2"><span data-id="107" class="text-accent-cyan mt-1 flex-shrink-0">▹</span> Developed PyTorch-based NLP models for document classification and entity extraction</li>
+                                        <li data-id="108" class="flex gap-2"><span data-id="109" class="text-accent-cyan mt-1 flex-shrink-0">▹</span> Implemented OAuth2/JWT-based authentication and RBAC for multi-tenant SaaS environment</li>
+                                        <li data-id="110" class="flex gap-2"><span data-id="111" class="text-accent-cyan mt-1 flex-shrink-0">▹</span> Coordinated full product lifecycle from architecture through CI/CD deployment and monitoring</li>
+                                    </ul>
+                                </div>
+                                <button data-id="112" class="expand-btn text-xs font-semibold text-accent-blue hover:text-accent-cyan transition-colors flex items-center gap-1" data-target="expand-1-r0u4">
+                                    <i data-id="113" data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform duration-300"></i> Show more
+                                </button>
+                                <div data-id="114" class="flex flex-wrap gap-1.5 mt-4">
+                                    <span data-id="115" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">Angular 21</span>
+                                    <span data-id="116" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">FastAPI</span>
+                                    <span data-id="117" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">AWS Bedrock</span>
+                                    <span data-id="118" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">LangChain</span>
+                                    <span data-id="119" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">OpenSearch</span>
+                                    <span data-id="120" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">PyTorch</span>
+                                    <span data-id="121" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">OAuth2</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Entry 2 -->
+                    <div data-id="122" class="relative mb-12 md:mb-16 md:flex md:items-start" data-timeline="left">
+                        <div data-id="123" class="timeline-dot hidden md:block" style="border-color: var(--accent-blue);"></div>
+                        <div data-id="124" class="md:w-1/2 md:pr-12 pl-12 md:pl-0 relative">
+                            <div data-id="125" class="absolute left-0 top-7 w-4 h-4 rounded-full border-[3px] bg-bg md:hidden" style="border-color: var(--accent-blue); left: 12px;"></div>
+                            <div data-id="126" id="exp-card-2-s1v5" class="bg-bg-surface border border-border rounded-xl p-6 card-glow">
+                                <div data-id="127" class="flex items-center gap-3 mb-3">
+                                    <div data-id="128" class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(59,130,246,0.15);">
+                                        <i data-id="129" data-lucide="database" class="w-5 h-5 text-accent-blue"></i>
+                                    </div>
+                                    <div data-id="130">
+                                        <span data-id="131" class="text-xs font-semibold px-2.5 py-0.5 rounded-full" style="background: rgba(59,130,246,0.15); color: var(--accent-blue);">2015 – 2026</span>
+                                    </div>
+                                </div>
+                                <h3 data-id="132" class="text-lg font-bold text-txt-primary mb-1">Software Engineer / Data Engineer</h3>
+                                <p data-id="133" class="text-sm text-accent-blue font-medium mb-1">Duke Energy</p>
+                                <p data-id="134" class="text-xs text-txt-dim mb-4 flex items-center gap-1"><i data-id="135" data-lucide="map-pin" class="w-3 h-3"></i> Charlotte, NC</p>
+                                <ul data-id="136" class="space-y-2 text-sm text-txt-muted mb-3">
+                                    <li data-id="137" class="flex gap-2"><span data-id="138" class="text-accent-blue mt-1 flex-shrink-0">▹</span> Led AWS cloud migration re-platforming on-premises legacy systems to S3, Glue, Lambda, RDS, Redshift (~30% cost reduction)</li>
+                                    <li data-id="139" class="flex gap-2"><span data-id="140" class="text-accent-blue mt-1 flex-shrink-0">▹</span> Engineered AWS Glue/Spark ETL/ELT pipelines processing millions of records daily</li>
+                                    <li data-id="141" class="flex gap-2"><span data-id="142" class="text-accent-blue mt-1 flex-shrink-0">▹</span> Designed event-driven pipeline architectures using Lambda and SQS for real-time operational data</li>
+                                </ul>
+                                <div data-id="143" id="expand-2-t2w6" class="expandable-content">
+                                    <ul data-id="144" class="space-y-2 text-sm text-txt-muted mb-3">
+                                        <li data-id="145" class="flex gap-2"><span data-id="146" class="text-accent-blue mt-1 flex-shrink-0">▹</span> Built RESTful APIs in Python and Java exposing processed data to analytics teams</li>
+                                        <li data-id="147" class="flex gap-2"><span data-id="148" class="text-accent-blue mt-1 flex-shrink-0">▹</span> Developed CloudWatch-based data quality validation frameworks and SLA alerting</li>
+                                        <li data-id="149" class="flex gap-2"><span data-id="150" class="text-accent-blue mt-1 flex-shrink-0">▹</span> Conducted technical screening interviews and collaborated with hiring managers on engineering talent acquisition</li>
+                                        <li data-id="151" class="flex gap-2"><span data-id="152" class="text-accent-blue mt-1 flex-shrink-0">▹</span> Mentored junior engineers through code reviews, pair programming, and knowledge-sharing workshops</li>
+                                    </ul>
+                                </div>
+                                <button data-id="153" class="expand-btn text-xs font-semibold text-accent-blue hover:text-accent-cyan transition-colors flex items-center gap-1" data-target="expand-2-t2w6">
+                                    <i data-id="154" data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform duration-300"></i> Show more
+                                </button>
+                                <div data-id="155" class="flex flex-wrap gap-1.5 mt-4">
+                                    <span data-id="156" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">AWS S3/Glue/Lambda</span>
+                                    <span data-id="157" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">RDS/Redshift</span>
+                                    <span data-id="158" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">Apache Spark</span>
+                                    <span data-id="159" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">Python</span>
+                                    <span data-id="160" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">Java</span>
+                                    <span data-id="161" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">SQL</span>
+                                    <span data-id="162" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">ETL/ELT</span>
+                                    <span data-id="163" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">CI/CD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Entry 3 -->
+                    <div data-id="164" class="relative md:flex md:items-start" data-timeline="right">
+                        <div data-id="165" class="timeline-dot hidden md:block" style="border-color: var(--accent-purple);"></div>
+                        <div data-id="166" class="md:w-1/2 md:ml-auto md:pl-12 pl-12 md:pl-12 relative">
+                            <div data-id="167" class="absolute left-0 top-7 w-4 h-4 rounded-full border-[3px] bg-bg md:hidden" style="border-color: var(--accent-purple); left: 12px;"></div>
+                            <div data-id="168" id="exp-card-3-u3x7" class="bg-bg-surface border border-border rounded-xl p-6 card-glow">
+                                <div data-id="169" class="flex items-center gap-3 mb-3">
+                                    <div data-id="170" class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(139,92,246,0.15);">
+                                        <i data-id="171" data-lucide="cpu" class="w-5 h-5 text-accent-purple"></i>
+                                    </div>
+                                    <div data-id="172">
+                                        <span data-id="173" class="text-xs font-semibold px-2.5 py-0.5 rounded-full" style="background: rgba(139,92,246,0.15); color: var(--accent-purple);">2009 – 2015</span>
+                                    </div>
+                                </div>
+                                <h3 data-id="174" class="text-lg font-bold text-txt-primary mb-1">Senior AI Platform Engineer / Senior Data Engineer</h3>
+                                <p data-id="175" class="text-sm text-accent-purple font-medium mb-1">Accenture — Client: Duke Energy</p>
+                                <p data-id="176" class="text-xs text-txt-dim mb-4 flex items-center gap-1"><i data-id="177" data-lucide="map-pin" class="w-3 h-3"></i> Charlotte, NC</p>
+                                <ul data-id="178" class="space-y-2 text-sm text-txt-muted mb-3">
+                                    <li data-id="179" class="flex gap-2"><span data-id="180" class="text-accent-purple mt-1 flex-shrink-0">▹</span> Architected cloud-native Databricks/Delta Lake CDC data platform from the ground up</li>
+                                    <li data-id="181" class="flex gap-2"><span data-id="182" class="text-accent-purple mt-1 flex-shrink-0">▹</span> Designed PySpark ETL pipelines with data quality, lineage tracking, and schema governance</li>
+                                    <li data-id="183" class="flex gap-2"><span data-id="184" class="text-accent-purple mt-1 flex-shrink-0">▹</span> Integrated AWS Bedrock and LangChain to build a RAG-based knowledge retrieval system (~40% reduction in query resolution time)</li>
+                                </ul>
+                                <div data-id="185" id="expand-3-v4y8" class="expandable-content">
+                                    <ul data-id="186" class="space-y-2 text-sm text-txt-muted mb-3">
+                                        <li data-id="187" class="flex gap-2"><span data-id="188" class="text-accent-purple mt-1 flex-shrink-0">▹</span> Deployed PyTorch-based ML models for predictive analytics via FastAPI microservices</li>
+                                        <li data-id="189" class="flex gap-2"><span data-id="190" class="text-accent-purple mt-1 flex-shrink-0">▹</span> Established RBAC, audit logging, and access control policies aligned with enterprise security standards</li>
+                                        <li data-id="191" class="flex gap-2"><span data-id="192" class="text-accent-purple mt-1 flex-shrink-0">▹</span> Led DevOps/SRE practices: CI/CD pipelines, infrastructure-as-code, and incident response SLAs</li>
+                                        <li data-id="193" class="flex gap-2"><span data-id="194" class="text-accent-purple mt-1 flex-shrink-0">▹</span> Mentored data engineers and coordinated sprint planning across multi-team delivery model</li>
+                                    </ul>
+                                </div>
+                                <button data-id="195" class="expand-btn text-xs font-semibold text-accent-blue hover:text-accent-cyan transition-colors flex items-center gap-1" data-target="expand-3-v4y8">
+                                    <i data-id="196" data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform duration-300"></i> Show more
+                                </button>
+                                <div data-id="197" class="flex flex-wrap gap-1.5 mt-4">
+                                    <span data-id="198" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">Databricks</span>
+                                    <span data-id="199" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">Delta Lake</span>
+                                    <span data-id="200" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">PySpark</span>
+                                    <span data-id="201" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">AWS Bedrock</span>
+                                    <span data-id="202" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">LangChain</span>
+                                    <span data-id="203" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">PyTorch</span>
+                                    <span data-id="204" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">FastAPI</span>
+                                    <span data-id="205" class="text-[10px] font-medium px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">Azure DevOps</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section data-id="206" id="skills-u4p2" class="py-20 md:py-28 section-reveal">
+            <div data-id="207" class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+                <h2 data-id="208" id="skills-title-w5z9" class="text-3xl md:text-4xl font-bold text-center mb-16">Technical <span data-id="209" class="gradient-text">Arsenal</span></h2>
+                <div data-id="210" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+
+                    <!-- Languages -->
+                    <div data-id="211" id="skill-card-1-x6a0" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="212" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="213" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-blue/15">
+                                <i data-id="214" data-lucide="code" class="w-5 h-5 text-accent-blue"></i>
+                            </div>
+                            <h3 data-id="215" class="font-bold text-sm">Languages</h3>
+                        </div>
+                        <div data-id="216" class="flex flex-wrap gap-1.5 mb-4">
+                            <span data-id="217" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">Python</span>
+                            <span data-id="218" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">Java</span>
+                            <span data-id="219" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">C#/.NET</span>
+                            <span data-id="220" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">SQL</span>
+                            <span data-id="221" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">TypeScript</span>
+                            <span data-id="222" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">PySpark</span>
+                        </div>
+                        <div data-id="223" class="space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div data-id="224"><div data-id="225" class="flex justify-between text-[10px] text-txt-muted mb-0.5"><span data-id="226">Python</span><span data-id="227">95%</span></div><div data-id="228" class="h-1.5 rounded-full bg-bg-elevated overflow-hidden"><div data-id="229" class="skill-bar-fill h-full rounded-full bg-gradient-to-r from-accent-blue to-accent-cyan" style="--fill: 95%"></div></div></div>
+                            <div data-id="230"><div data-id="231" class="flex justify-between text-[10px] text-txt-muted mb-0.5"><span data-id="232">SQL</span><span data-id="233">95%</span></div><div data-id="234" class="h-1.5 rounded-full bg-bg-elevated overflow-hidden"><div data-id="235" class="skill-bar-fill h-full rounded-full bg-gradient-to-r from-accent-blue to-accent-cyan" style="--fill: 95%"></div></div></div>
+                            <div data-id="236"><div data-id="237" class="flex justify-between text-[10px] text-txt-muted mb-0.5"><span data-id="238">Java</span><span data-id="239">85%</span></div><div data-id="240" class="h-1.5 rounded-full bg-bg-elevated overflow-hidden"><div data-id="241" class="skill-bar-fill h-full rounded-full bg-gradient-to-r from-accent-blue to-accent-cyan" style="--fill: 85%"></div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- AI / ML -->
+                    <div data-id="242" id="skill-card-2-y7b1" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="243" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="244" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-cyan/15">
+                                <i data-id="245" data-lucide="brain" class="w-5 h-5 text-accent-cyan"></i>
+                            </div>
+                            <h3 data-id="246" class="font-bold text-sm">AI / ML</h3>
+                        </div>
+                        <div data-id="247" class="flex flex-wrap gap-1.5 mb-4">
+                            <span data-id="248" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">PyTorch</span>
+                            <span data-id="249" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">LangChain</span>
+                            <span data-id="250" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">AWS Bedrock</span>
+                            <span data-id="251" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Hugging Face</span>
+                            <span data-id="252" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Scikit-learn</span>
+                        </div>
+                        <div data-id="253" class="space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div data-id="254"><div data-id="255" class="flex justify-between text-[10px] text-txt-muted mb-0.5"><span data-id="256">PyTorch</span><span data-id="257">90%</span></div><div data-id="258" class="h-1.5 rounded-full bg-bg-elevated overflow-hidden"><div data-id="259" class="skill-bar-fill h-full rounded-full bg-gradient-to-r from-accent-cyan to-accent-blue" style="--fill: 90%"></div></div></div>
+                            <div data-id="260"><div data-id="261" class="flex justify-between text-[10px] text-txt-muted mb-0.5"><span data-id="262">LangChain</span><span data-id="263">88%</span></div><div data-id="264" class="h-1.5 rounded-full bg-bg-elevated overflow-hidden"><div data-id="265" class="skill-bar-fill h-full rounded-full bg-gradient-to-r from-accent-cyan to-accent-blue" style="--fill: 88%"></div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Data Platform -->
+                    <div data-id="266" id="skill-card-3-z8c2" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="267" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="268" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-purple/15">
+                                <i data-id="269" data-lucide="hard-drive" class="w-5 h-5 text-accent-purple"></i>
+                            </div>
+                            <h3 data-id="270" class="font-bold text-sm">Data Platform</h3>
+                        </div>
+                        <div data-id="271" class="flex flex-wrap gap-1.5 mb-4">
+                            <span data-id="272" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">Databricks</span>
+                            <span data-id="273" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">Delta Lake</span>
+                            <span data-id="274" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">Apache Spark</span>
+                            <span data-id="275" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">Apache Kafka</span>
+                            <span data-id="276" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">dbt</span>
+                        </div>
+                        <div data-id="277" class="space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div data-id="278"><div data-id="279" class="flex justify-between text-[10px] text-txt-muted mb-0.5"><span data-id="280">Databricks</span><span data-id="281">90%</span></div><div data-id="282" class="h-1.5 rounded-full bg-bg-elevated overflow-hidden"><div data-id="283" class="skill-bar-fill h-full rounded-full bg-gradient-to-r from-accent-purple to-accent-blue" style="--fill: 90%"></div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Cloud -->
+                    <div data-id="284" id="skill-card-4-a9d3" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="285" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="286" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-blue/15">
+                                <i data-id="287" data-lucide="cloud" class="w-5 h-5 text-accent-blue"></i>
+                            </div>
+                            <h3 data-id="288" class="font-bold text-sm">Cloud</h3>
+                        </div>
+                        <div data-id="289" class="flex flex-wrap gap-1.5 mb-4">
+                            <span data-id="290" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">AWS Bedrock</span>
+                            <span data-id="291" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">OpenSearch</span>
+                            <span data-id="292" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">Lambda</span>
+                            <span data-id="293" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">S3 / Glue</span>
+                            <span data-id="294" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">Azure ADF</span>
+                            <span data-id="295" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">Azure Synapse</span>
+                        </div>
+                        <div data-id="296" class="space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div data-id="297"><div data-id="298" class="flex justify-between text-[10px] text-txt-muted mb-0.5"><span data-id="299">AWS</span><span data-id="300">92%</span></div><div data-id="301" class="h-1.5 rounded-full bg-bg-elevated overflow-hidden"><div data-id="302" class="skill-bar-fill h-full rounded-full bg-gradient-to-r from-accent-blue to-accent-cyan" style="--fill: 92%"></div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- DevOps / SRE -->
+                    <div data-id="303" id="skill-card-5-b0e4" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="304" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="305" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-cyan/15">
+                                <i data-id="306" data-lucide="settings" class="w-5 h-5 text-accent-cyan"></i>
+                            </div>
+                            <h3 data-id="307" class="font-bold text-sm">DevOps / SRE</h3>
+                        </div>
+                        <div data-id="308" class="flex flex-wrap gap-1.5">
+                            <span data-id="309" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Docker</span>
+                            <span data-id="310" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Kubernetes</span>
+                            <span data-id="311" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Terraform</span>
+                            <span data-id="312" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">GitHub Actions</span>
+                            <span data-id="313" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Azure DevOps</span>
+                        </div>
+                    </div>
+
+                    <!-- RAG & Vector Search -->
+                    <div data-id="314" id="skill-card-6-c1f5" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="315" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="316" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-purple/15">
+                                <i data-id="317" data-lucide="search" class="w-5 h-5 text-accent-purple"></i>
+                            </div>
+                            <h3 data-id="318" class="font-bold text-sm">RAG & Vector Search</h3>
+                        </div>
+                        <div data-id="319" class="flex flex-wrap gap-1.5">
+                            <span data-id="320" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">AWS OpenSearch</span>
+                            <span data-id="321" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">Vector Embeddings</span>
+                            <span data-id="322" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">Agentic AI</span>
+                            <span data-id="323" class="text-[11px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple">Semantic Search</span>
+                        </div>
+                    </div>
+
+                    <!-- Frontend -->
+                    <div data-id="324" id="skill-card-7-d2g6" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="325" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="326" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-blue/15">
+                                <i data-id="327" data-lucide="layout" class="w-5 h-5 text-accent-blue"></i>
+                            </div>
+                            <h3 data-id="328" class="font-bold text-sm">Frontend</h3>
+                        </div>
+                        <div data-id="329" class="flex flex-wrap gap-1.5">
+                            <span data-id="330" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">Angular 21</span>
+                            <span data-id="331" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">RxJS</span>
+                            <span data-id="332" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">TypeScript</span>
+                            <span data-id="333" class="text-[11px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">HTML/CSS</span>
+                        </div>
+                    </div>
+
+                    <!-- Governance -->
+                    <div data-id="334" id="skill-card-8-e3h7" class="bg-bg-surface border border-border rounded-xl p-5 card-glow skill-card-hover group">
+                        <div data-id="335" class="flex items-center gap-2.5 mb-4">
+                            <div data-id="336" class="w-9 h-9 rounded-lg flex items-center justify-center bg-accent-cyan/15">
+                                <i data-id="337" data-lucide="shield" class="w-5 h-5 text-accent-cyan"></i>
+                            </div>
+                            <h3 data-id="338" class="font-bold text-sm">Governance</h3>
+                        </div>
+                        <div data-id="339" class="flex flex-wrap gap-1.5">
+                            <span data-id="340" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Data Lineage</span>
+                            <span data-id="341" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">RBAC</span>
+                            <span data-id="342" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Audit Logging</span>
+                            <span data-id="343" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Schema Enforcement</span>
+                            <span data-id="344" class="text-[11px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan">Data Cataloging</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS SECTION -->
+        <section data-id="345" id="projects-v6n3" class="py-20 md:py-28 section-reveal">
+            <div data-id="346" class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+                <h2 data-id="347" id="proj-title-f4i8" class="text-3xl md:text-4xl font-bold text-center mb-16">Signature <span data-id="348" class="gradient-text">Projects</span></h2>
+                <div data-id="349" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                    <!-- Project 1 -->
+                    <div data-id="350" id="proj-card-1-g5j9" class="bg-bg-surface border border-border rounded-xl overflow-hidden card-glow group">
+                        <div data-id="351" class="h-1.5 w-full" style="background: linear-gradient(90deg, #3b82f6, #06b6d4);"></div>
+                        <div data-id="352" class="p-6">
+                            <div data-id="353" class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(6,182,212,0.2));">
+                                <i data-id="354" data-lucide="brain" class="w-6 h-6 text-accent-cyan"></i>
+                            </div>
+                            <h3 data-id="355" class="text-lg font-bold mb-3">Enterprise RAG Knowledge Platform</h3>
+                            <p data-id="356" class="text-sm text-txt-muted leading-relaxed mb-4">
+                                Architected a retrieval-augmented generation system over a corpus of utility operational documents using AWS Bedrock, LangChain, and OpenSearch vector search. Integrated with FastAPI microservices for real-time analyst query resolution across enterprise dashboards.
+                            </p>
+                            <div data-id="357" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold mb-4" style="background: rgba(6,182,212,0.15); color: var(--accent-cyan);">
+                                <i data-id="358" data-lucide="trending-up" class="w-3.5 h-3.5"></i> ~40% faster query resolution
+                            </div>
+                            <div data-id="359" class="flex flex-wrap gap-1.5">
+                                <span data-id="360" class="text-[10px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">AWS Bedrock</span>
+                                <span data-id="361" class="text-[10px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">LangChain</span>
+                                <span data-id="362" class="text-[10px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">OpenSearch</span>
+                                <span data-id="363" class="text-[10px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">FastAPI</span>
+                                <span data-id="364" class="text-[10px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue border border-accent-blue/20">PyTorch</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div data-id="365" id="proj-card-2-h6k0" class="bg-bg-surface border border-border rounded-xl overflow-hidden card-glow group">
+                        <div data-id="366" class="h-1.5 w-full" style="background: linear-gradient(90deg, #3b82f6, #8b5cf6);"></div>
+                        <div data-id="367" class="p-6">
+                            <div data-id="368" class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2));">
+                                <i data-id="369" data-lucide="database" class="w-6 h-6 text-accent-blue"></i>
+                            </div>
+                            <h3 data-id="370" class="text-lg font-bold mb-3">Cloud-Native Utility Data Platform</h3>
+                            <p data-id="371" class="text-sm text-txt-muted leading-relaxed mb-4">
+                                Designed and delivered a ground-up Databricks/Delta Lake CDC data platform for a Fortune 500 utility, processing millions of records daily with real-time ingestion, schema governance, lineage tracking, and enterprise access control.
+                            </p>
+                            <div data-id="372" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold mb-4" style="background: rgba(59,130,246,0.15); color: var(--accent-blue);">
+                                <i data-id="373" data-lucide="zap" class="w-3.5 h-3.5"></i> Millions of records daily
+                            </div>
+                            <div data-id="374" class="flex flex-wrap gap-1.5">
+                                <span data-id="375" class="text-[10px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">Databricks</span>
+                                <span data-id="376" class="text-[10px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">Delta Lake</span>
+                                <span data-id="377" class="text-[10px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">PySpark</span>
+                                <span data-id="378" class="text-[10px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">AWS</span>
+                                <span data-id="379" class="text-[10px] px-2 py-0.5 rounded bg-accent-purple/10 text-accent-purple border border-accent-purple/20">Azure DevOps</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div data-id="380" id="proj-card-3-i7l1" class="bg-bg-surface border border-border rounded-xl overflow-hidden card-glow group">
+                        <div data-id="381" class="h-1.5 w-full" style="background: linear-gradient(90deg, #06b6d4, #8b5cf6);"></div>
+                        <div data-id="382" class="p-6">
+                            <div data-id="383" class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(139,92,246,0.2));">
+                                <i data-id="384" data-lucide="bar-chart-3" class="w-6 h-6 text-accent-purple"></i>
+                            </div>
+                            <h3 data-id="385" class="text-lg font-bold mb-3">Ibis Equity AI Financial Platform</h3>
+                            <p data-id="386" class="text-sm text-txt-muted leading-relaxed mb-4">
+                                Built a full-stack, multi-tenant SaaS AI platform for financial document intelligence. End-to-end ownership: Angular 21 frontend, FastAPI backend, PyTorch NLP models, AWS OpenSearch vector store, and OAuth2 security.
+                            </p>
+                            <div data-id="387" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold mb-4" style="background: rgba(139,92,246,0.15); color: var(--accent-purple);">
+                                <i data-id="388" data-lucide="timer" class="w-3.5 h-3.5"></i> Sub-200ms vector retrieval
+                            </div>
+                            <div data-id="389" class="flex flex-wrap gap-1.5">
+                                <span data-id="390" class="text-[10px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">Angular 21</span>
+                                <span data-id="391" class="text-[10px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">FastAPI</span>
+                                <span data-id="392" class="text-[10px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">PyTorch</span>
+                                <span data-id="393" class="text-[10px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">AWS OpenSearch</span>
+                                <span data-id="394" class="text-[10px] px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">OAuth2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CERTIFICATIONS SECTION -->
+        <section data-id="395" id="certs-w8k4" class="py-20 md:py-28 section-reveal">
+            <div data-id="396" class="max-w-4xl mx-auto px-4 md:px-6 lg:px-8">
+                <h2 data-id="397" id="cert-title-j8m2" class="text-3xl md:text-4xl font-bold text-center mb-16"><span data-id="398" class="gradient-text">Certifications</span></h2>
+                <div data-id="399" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Cert 1 -->
+                    <div data-id="400" id="cert-card-1-k9n3" class="cert-card bg-bg-surface rounded-xl p-8 text-center">
+                        <div data-id="401" class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(245,158,11,0.2));">
+                            <i data-id="402" data-lucide="award" class="w-8 h-8" style="color: #f59e0b;"></i>
+                        </div>
+                        <h3 data-id="403" class="text-lg font-bold mb-2">AWS Certified AI Practitioner</h3>
+                        <p data-id="404" class="text-sm text-txt-muted">Amazon Web Services</p>
+                    </div>
+                    <!-- Cert 2 -->
+                    <div data-id="405" id="cert-card-2-l0o4" class="cert-card bg-bg-surface rounded-xl p-8 text-center">
+                        <div data-id="406" class="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(245,158,11,0.2));">
+                            <i data-id="407" data-lucide="award" class="w-8 h-8" style="color: #f59e0b;"></i>
+                        </div>
+                        <h3 data-id="408" class="text-lg font-bold mb-2">AWS Certified Cloud Practitioner</h3>
+                        <p data-id="409" class="text-sm text-txt-muted">Amazon Web Services</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section data-id="410" id="contact-y2j5" class="py-20 md:py-28 section-reveal">
+            <div data-id="411" class="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 text-center">
+                <h2 data-id="412" id="contact-title-m1p5" class="text-3xl md:text-4xl font-bold mb-6">Let's <span data-id="413" class="gradient-text">Connect</span></h2>
+                <p data-id="414" id="contact-sub-n2q6" class="text-txt-muted max-w-xl mx-auto mb-12 leading-relaxed">
+                    Open to senior data engineering and AI platform leadership opportunities. Let's build something extraordinary.
+                </p>
+                <div data-id="415" class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                    <a data-id="416" href="mailto:de.shackleford79@gmail.com" id="contact-email-o3r7" class="bg-bg-surface border border-border rounded-xl p-6 card-glow flex flex-col items-center gap-3 hover:border-accent-blue/50 transition-colors">
+                        <div data-id="417" class="w-11 h-11 rounded-xl flex items-center justify-center bg-accent-blue/15">
+                            <i data-id="418" data-lucide="mail" class="w-5 h-5 text-accent-blue"></i>
+                        </div>
+                        <div data-id="419">
+                            <p data-id="420" class="text-xs text-txt-dim mb-0.5">Email</p>
+                            <p data-id="421" class="text-sm text-txt-primary font-medium break-all">de.shackleford79@gmail.com</p>
+                        </div>
+                    </a>
+                    <div data-id="422" id="contact-loc-p4s8" class="bg-bg-surface border border-border rounded-xl p-6 flex flex-col items-center gap-3">
+                        <div data-id="423" class="w-11 h-11 rounded-xl flex items-center justify-center bg-accent-cyan/15">
+                            <i data-id="424" data-lucide="map-pin" class="w-5 h-5 text-accent-cyan"></i>
+                        </div>
+                        <div data-id="425">
+                            <p data-id="426" class="text-xs text-txt-dim mb-0.5">Location</p>
+                            <p data-id="427" class="text-sm text-txt-primary font-medium">Charlotte, NC</p>
+                        </div>
+                    </div>
+                    <div data-id="428" id="contact-status-q5t9" class="bg-bg-surface border border-border rounded-xl p-6 flex flex-col items-center gap-3">
+                        <div data-id="429" class="w-11 h-11 rounded-xl flex items-center justify-center bg-accent-purple/15">
+                            <i data-id="430" data-lucide="briefcase" class="w-5 h-5 text-accent-purple"></i>
+                        </div>
+                        <div data-id="431">
+                            <p data-id="432" class="text-xs text-txt-dim mb-0.5">Status</p>
+                            <p data-id="433" class="text-sm text-txt-primary font-medium">Open to Opportunities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer data-id="434" id="footer-r6u0" class="border-t border-border py-10">
+        <div data-id="435" class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 text-center">
+            <p data-id="436" class="text-sm text-txt-primary font-semibold mb-1">Daryl E. Shackleford &copy; 2026</p>
+            <p data-id="437" class="text-xs text-txt-dim mb-4">Data Engineering Manager · AI Platform Engineer · Cloud Data Architect</p>
+            <p data-id="438" class="text-xs text-txt-dim">Made by Copilot</p>
+        </div>
+    </footer>
+
+    <!-- BACK TO TOP -->
+    <button data-id="439" id="back-to-top-s7v1" class="back-to-top fixed bottom-6 right-6 w-11 h-11 rounded-full flex items-center justify-center z-40 transition-all duration-300 hover:shadow-lg hover:shadow-accent-blue/30" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);" aria-label="Back to top">
+        <i data-id="440" data-lucide="arrow-up" class="w-5 h-5 text-white"></i>
+    </button>
+
+    <script>
+        // Guard Lucide icons
+        if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+            lucide.createIcons();
+        }
+
+        // ========== TYPEWRITER ==========
+        (function() {
+            const titles = [
+                "Data Engineering Manager",
+                "AI Platform Engineer",
+                "Cloud Data Architect",
+                "RAG & ML Systems Builder"
+            ];
+            const el = document.getElementById('typewriter-d6g0');
+            if (!el) return;
+            let titleIdx = 0, charIdx = 0, deleting = false, pauseEnd = 0;
+
+            function tick() {
+                const now = Date.now();
+                if (now < pauseEnd) { requestAnimationFrame(tick); return; }
+
+                const current = titles[titleIdx];
+                if (!deleting) {
+                    el.textContent = current.substring(0, charIdx + 1);
+                    charIdx++;
+                    if (charIdx === current.length) {
+                        deleting = true;
+                        pauseEnd = now + 2000;
+                    }
+                } else {
+                    el.textContent = current.substring(0, charIdx - 1);
+                    charIdx--;
+                    if (charIdx === 0) {
+                        deleting = false;
+                        titleIdx = (titleIdx + 1) % titles.length;
+                    }
+                }
+                const speed = deleting ? 35 : 65;
+                setTimeout(() => requestAnimationFrame(tick), speed);
+            }
+            tick();
+        })();
+
+        // ========== MOBILE MENU ==========
+        (function() {
+            const btn = document.getElementById('mobile-menu-btn-z1q6');
+            const menu = document.getElementById('mobile-menu-a3w7');
+            const closeBtn = document.getElementById('mobile-menu-close-b4e8');
+            if (!btn || !menu || !closeBtn) return;
+
+            btn.addEventListener('click', function() { menu.classList.remove('hidden'); });
+            closeBtn.addEventListener('click', function() { menu.classList.add('hidden'); });
+
+            document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
+                link.addEventListener('click', function() { menu.classList.add('hidden'); });
+            });
+        })();
+
+        // ========== EXPAND/COLLAPSE ==========
+        document.querySelectorAll('.expand-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const target = document.getElementById(btn.dataset.target);
+                if (!target) return;
+                const isExpanded = target.classList.contains('expanded');
+                target.classList.toggle('expanded');
+                const icon = btn.querySelector('i');
+                if (icon) icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
+                btn.childNodes.forEach(function(n) {
+                    if (n.nodeType === 3) n.textContent = isExpanded ? ' Show more' : ' Show less';
+                });
+            });
+        });
+
+        // ========== INTERSECTION OBSERVER — SECTION REVEAL ==========
+        (function() {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Animate skill bars
+                        entry.target.querySelectorAll('.skill-bar-fill').forEach(function(bar) {
+                            bar.classList.add('animate');
+                        });
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('.section-reveal').forEach(function(s) { observer.observe(s); });
+        })();
+
+        // ========== ACTIVE NAV LINK HIGHLIGHT ==========
+        (function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link[data-nav]');
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(function(link) { link.classList.remove('active'); });
+                        const active = document.querySelector('.nav-link[data-nav="' + entry.target.id + '"]');
+                        if (active) active.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
+
+            sections.forEach(function(s) { observer.observe(s); });
+        })();
+
+        // ========== BACK TO TOP ==========
+        (function() {
+            const btn = document.getElementById('back-to-top-s7v1');
+            if (!btn) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 600) {
+                    btn.classList.add('show');
+                } else {
+                    btn.classList.remove('show');
+                }
+            });
+            btn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+
+        // ========== SKILL BARS ON HOVER ==========
+        document.querySelectorAll('.skill-card-hover').forEach(function(card) {
+            card.addEventListener('mouseenter', function() {
+                card.querySelectorAll('.skill-bar-fill').forEach(function(bar) {
+                    bar.classList.add('animate');
+                });
+            });
+            card.addEventListener('mouseleave', function() {
+                card.querySelectorAll('.skill-bar-fill').forEach(function(bar) {
+                    bar.classList.remove('animate');
+                });
+            });
+        });
+
+        // ========== MOBILE TIMELINE LINE ==========
+        (function() {
+            const line = document.querySelector('.timeline-line');
+            if (!line) return;
+            function checkWidth() {
+                if (window.innerWidth < 768) {
+                    line.style.display = 'block';
+                    line.style.left = '20px';
+                } else {
+                    line.style.display = 'block';
+                    line.style.left = '50%';
+                }
+            }
+            checkWidth();
+            window.addEventListener('resize', checkWidth);
+        })();
+    </script>
+</body>
+</html>
