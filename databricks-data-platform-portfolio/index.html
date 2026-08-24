@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Databricks Data Platform Portfolio</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #141f35;
+      --panel-2: #1a2a47;
+      --text: #eaf1ff;
+      --muted: #b6c4e3;
+      --accent: #66c5ff;
+      --accent-2: #8ef0c8;
+      --border: rgba(255, 255, 255, 0.1);
+      --shadow: rgba(3, 8, 22, 0.42);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #090f1e 0%, #121c34 100%);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 36px 20px 80px;
+    }
+
+    .hero, section {
+      background: rgba(20, 31, 53, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 16px 36px var(--shadow);
+    }
+
+    .hero {
+      padding: 30px 28px;
+      background: linear-gradient(135deg, rgba(102, 197, 255, 0.15), rgba(142, 240, 200, 0.08));
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(102, 197, 255, 0.14);
+      border: 1px solid rgba(102, 197, 255, 0.36);
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 6px 12px;
+      margin-bottom: 12px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.25;
+    }
+
+    h1 { font-size: clamp(2rem, 3.4vw, 3.2rem); margin-bottom: 10px; }
+    h2 { font-size: clamp(1.35rem, 2.2vw, 2rem); margin-bottom: 12px; }
+    h3 { font-size: 1.08rem; margin-bottom: 8px; color: var(--accent-2); }
+
+    p, li { color: var(--text); }
+    .muted { color: var(--muted); }
+
+    section {
+      margin-top: 24px;
+      padding: 22px 22px 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: rgba(26, 42, 71, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .step {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .arrow {
+      color: var(--accent);
+      font-size: 1.45rem;
+      font-weight: 700;
+    }
+
+    ul { margin-top: 8px; padding-left: 20px; }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .link-card {
+      background: #0f182e;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .link-card a {
+      color: var(--accent);
+      text-decoration: none;
+      word-break: break-word;
+      font-weight: 600;
+    }
+
+    .link-card a:hover { text-decoration: underline; }
+
+    .footer-note {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="tag">Portfolio Narrative</div>
+      <h1>Databricks Data Platform Portfolio</h1>
+      <p class="muted">
+        This portfolio consolidates the end-to-end narrative across three connected projects: a file-ingestion utility,
+        an ADF + Databricks + Delta Lake reference architecture, and a full CDC implementation lifecycle. Together they
+        show how raw operational data can move from source systems to governed, analytics-ready products with repeatable,
+        production-safe engineering patterns.
+      </p>
+    </header>
+
+    <section>
+      <h2>1. Full narrative: what this body of work delivers</h2>
+      <p>
+        The narrative begins with practical ingestion mechanics and scales into enterprise data engineering patterns.
+        In the first phase, ingestion is built for operational reliability: files are detected, validated, transformed,
+        loaded into Delta tables, tracked in local state, and archived to avoid duplicate processing. In the second phase,
+        orchestration expands through Azure Data Factory and Databricks to show governed movement from raw ingestion into
+        Bronze, Silver, and Gold layers. In the third phase, CDC patterns complete the architecture by introducing
+        near-real-time change propagation, merge semantics, and downstream consumption readiness.
+      </p>
+      <p>
+        The combined outcome is a portfolio-level blueprint for modern data platforms: ingestion that is deterministic,
+        transformation layers that are quality-aware, and integration pathways that support BI, ML, and operational
+        analytics without losing lineage, schema governance, or auditability.
+      </p>
+    </section>
+
+    <section>
+      <h2>2. Platform architecture narrative</h2>
+      <div class="flow">
+        <div class="step">Source Files / Event Streams</div>
+        <div class="arrow">→</div>
+        <div class="step">Ingestion + Validation</div>
+        <div class="arrow">→</div>
+        <div class="step">Bronze (Raw)</div>
+        <div class="arrow">→</div>
+        <div class="step">Silver (Cleaned)</div>
+        <div class="arrow">→</div>
+        <div class="step">Gold (Business Models)</div>
+        <div class="arrow">→</div>
+        <div class="step">BI / ML / APIs</div>
+      </div>
+      <div class="grid" style="margin-top:14px;">
+        <article class="card">
+          <h3>Ingestion Reliability</h3>
+          <ul>
+            <li>File readiness checks prevent partial or locked reads.</li>
+            <li>State tracking prevents duplicate imports across runs.</li>
+            <li>Post-processing archive keeps landing zones clean.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Lakehouse Quality Controls</h3>
+          <ul>
+            <li>Schema-aware loads keep table definitions predictable.</li>
+            <li>Layered modeling separates raw, conformed, and curated data.</li>
+            <li>Transformation stages enforce consistency for consumers.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>CDC and Operational Scale</h3>
+          <ul>
+            <li>Change events are applied with update/delete semantics.</li>
+            <li>Pipelines support incremental processing over full reloads.</li>
+            <li>Architecture aligns with CI/CD and controlled environment promotion.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Engineering narrative by project</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Databricks Ingest File Project Narrative</h3>
+          <p>
+            Focuses on dependable file ingestion into Databricks Delta: watching source paths, normalizing tabular input,
+            generating schema-safe SQL operations, tracking processed files, and moving completed artifacts into archive
+            directories. This establishes repeatability and operational confidence for batch and file-drop workflows.
+          </p>
+        </article>
+        <article class="card">
+          <h3>ADF + Databricks + Delta Lake Demo Project Overview</h3>
+          <p>
+            Extends the ingestion story into orchestration and platform design. ADF handles scheduling and dependency-aware
+            movement, while Databricks performs scalable transformations into Bronze/Silver/Gold layers. The result is a
+            business-aligned model that supports analytics, observability, and lifecycle governance.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Databricks CDC Documentation</h3>
+          <p>
+            Provides the operational and architectural depth for change data capture, including event interpretation,
+            merge behavior, data quality expectations, and deployment patterns. It closes the loop between ingestion
+            and continuously updated analytical datasets.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Published project documents</h2>
+      <p class="muted">Use these links to open each full project document.</p>
+      <div class="link-grid">
+        <div class="link-card">
+          <h3>Databricks CDC Documentation</h3>
+          <a href="https://ibis-equity.github.io/python-test-env/databricks-cdc-documentation/index.html">
+            https://ibis-equity.github.io/python-test-env/databricks-cdc-documentation/index.html
+          </a>
+        </div>
+        <div class="link-card">
+          <h3>Databricks Ingest File Project Narrative</h3>
+          <a href="https://ibis-equity.github.io/python-test-env/databricks-ingest-file-project-narrative/">
+            https://ibis-equity.github.io/python-test-env/databricks-ingest-file-project-narrative/
+          </a>
+        </div>
+        <div class="link-card">
+          <h3>ADF + Databricks + Delta Lake Demo Project Overview</h3>
+          <a href="https://ibis-equity.github.io/python-test-env/adf-databricks-delta-lake-demo-project-overview/">
+            https://ibis-equity.github.io/python-test-env/adf-databricks-delta-lake-demo-project-overview/
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      Portfolio scope: ingestion engineering, orchestration architecture, and CDC implementation for enterprise-grade Databricks data platforms.
+    </p>
+  </div>
+</body>
+</html>
