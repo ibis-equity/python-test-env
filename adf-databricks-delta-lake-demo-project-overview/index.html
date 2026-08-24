@@ -7,7 +7,7 @@
   <style>
     :root {
       --azure: #0078D4;
-      --azure-dark: #005ca3;
+      --azure-soft: #dfeeff;
       --navy: #0F172A;
       --sky: #EAF5FF;
       --light: #F3F6FA;
@@ -74,62 +74,76 @@
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 22px;
-      margin-bottom: 26px;
+      margin-bottom: 24px;
+    }
+
+    .intro,
+    .briefcase,
+    .card,
+    .panel,
+    .repo-item,
+    .timeline-item {
+      background: var(--light);
+      border: 1px solid var(--line);
+      border-radius: 14px;
     }
 
     .intro,
     .briefcase {
-      background: var(--light);
-      border: 1px solid var(--line);
-      border-radius: 16px;
       padding: 20px 22px;
     }
 
     .intro h2,
     .briefcase h2,
-    .section-title {
+    .section-title,
+    .card h3,
+    .repo-item h4,
+    .timeline-item h4 {
       margin: 0 0 12px;
       color: var(--navy);
-      font-size: 1.38rem;
     }
 
     .intro p,
     .briefcase p,
     .card p,
     .card li,
+    .repo-item p,
+    .timeline-item p,
+    .panel-body li,
     .small-text {
       color: var(--text);
-      line-height: 1.65;
+      line-height: 1.7;
       font-size: 0.98rem;
     }
 
     .briefcase ul,
-    .card ul {
+    .card ul,
+    .panel-body ul {
       margin: 0;
       padding-left: 18px;
-      line-height: 1.7;
+      line-height: 1.8;
     }
 
-    .three-col {
+    .three-col,
+    .table-grid,
+    .repo-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 20px;
       margin-top: 18px;
     }
 
+    .three-col {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .card {
-      background: var(--light);
-      border: 1px solid var(--line);
-      border-radius: 14px;
       padding: 18px 16px 14px;
-      min-height: 320px;
+      min-height: 290px;
     }
 
     .card h3 {
-      margin: 0 0 14px;
+      font-size: 1.18rem;
       text-align: center;
-      font-size: 1.2rem;
-      color: var(--navy);
     }
 
     .flow {
@@ -168,17 +182,12 @@
     }
 
     .table-grid {
-      display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-      margin-top: 20px;
     }
 
     .panel {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 14px;
       overflow: hidden;
+      background: var(--white);
     }
 
     .panel-header {
@@ -191,25 +200,19 @@
 
     .panel-body {
       padding: 16px 18px 18px;
+      background: var(--white);
     }
 
     .repo-grid {
-      display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
       margin-top: 22px;
     }
 
     .repo-item {
-      background: var(--light);
-      border: 1px solid var(--line);
-      border-radius: 12px;
       padding: 14px 14px 10px;
     }
 
     .repo-item h4 {
-      margin: 0 0 8px;
-      color: var(--navy);
       font-size: 1.02rem;
     }
 
@@ -217,7 +220,6 @@
       margin: 0;
       font-size: 0.92rem;
       line-height: 1.6;
-      color: var(--text);
     }
 
     .timeline {
@@ -229,9 +231,6 @@
     .timeline-item {
       position: relative;
       margin-bottom: 22px;
-      background: var(--light);
-      border: 1px solid var(--line);
-      border-radius: 12px;
       padding: 16px 16px 14px;
     }
 
@@ -248,17 +247,58 @@
       box-shadow: 0 0 0 2px var(--azure);
     }
 
-    .timeline-item h4 {
-      margin: 0 0 8px;
+    .section-title {
+      font-size: 1.5rem;
+      margin-top: 28px;
+    }
+
+    .info-band {
+      margin: 18px 0 10px;
+      background: linear-gradient(135deg, var(--azure-soft), #f6fbff);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px 18px;
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .script-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .script-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .script-card h4 {
+      margin: 0 0 10px;
       color: var(--navy);
       font-size: 1.04rem;
+    }
+
+    .code-box {
+      background: #0f172a;
+      color: #e2f0ff;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre-wrap;
     }
 
     .badges {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 20px;
       justify-content: center;
     }
 
@@ -285,7 +325,8 @@
       .hero,
       .three-col,
       .table-grid,
-      .repo-grid {
+      .repo-grid,
+      .script-grid {
         grid-template-columns: 1fr;
       }
 
@@ -312,27 +353,32 @@
         <div class="intro">
           <h2>Project overview</h2>
           <p>
-            This repository demonstrates a modern data platform built around a medallion architecture.
-            The goal is to ingest raw order data from multiple sources, validate it, transform it into
-            curated analytical datasets, and expose trusted business metrics for reporting and operations.
+            This project tells a complete data engineering story: raw order data lands in a lakehouse, gets validated,
+            transformed through medallion layers, and is turned into trusted business metrics for reporting.
           </p>
           <p>
-            The solution combines <strong>Azure Data Factory</strong>, <strong>Azure Data Lake Storage Gen2</strong>,
-            <strong>Databricks</strong>, <strong>Delta Lake</strong>, <strong>Delta Live Tables</strong>, and
-            <strong>Power BI</strong> into a practical enterprise-style flow.
+            The repository connects <strong>Azure Data Factory</strong>, <strong>ADLS Gen2</strong>, <strong>Databricks</strong>,
+            <strong>Delta Lake</strong>, <strong>Delta Live Tables</strong>, and <strong>Power BI</strong> into a realistic
+            end-to-end platform pattern. The emphasis is not just on moving files; it is about ensuring quality, governance,
+            and operational visibility as data moves from source to insight.
           </p>
         </div>
 
         <div class="briefcase">
           <h2>Business use case</h2>
           <ul>
-            <li>Capture customer orders from batch and streaming sources.</li>
-            <li>Normalize raw payloads into a consistent schema.</li>
-            <li>Reject invalid records through quality rules and quarantine them.</li>
-            <li>Provide curated silver and gold datasets for analytics and dashboarding.</li>
-            <li>Support monitoring, troubleshooting, and operational observability.</li>
+            <li>Capture orders from both batch uploads and live event streams.</li>
+            <li>Normalize raw payloads into a reliable and consistent schema.</li>
+            <li>Reject malformed records before they contaminate analytic tables.</li>
+            <li>Build silver and gold datasets for operational and executive reporting.</li>
+            <li>Support monitoring, troubleshooting, and service health checks.</li>
           </ul>
         </div>
+      </div>
+
+      <div class="info-band">
+        The key idea behind this repo is simple: a modern data platform is not only about pipelines. It is about data trust,
+        data quality, and the operational discipline required to make analytics usable for real business decisions.
       </div>
 
       <h2 class="section-title">Core architecture</h2>
@@ -340,30 +386,30 @@
         <div class="card">
           <h3>1. Ingestion</h3>
           <ul>
-            <li>ADF orchestrates batch and stream ingestion workflows.</li>
-            <li>Landing files arrive in ADLS through <code>landing/orders/batch</code> and <code>landing/orders/stream</code>.</li>
-            <li>Databricks notebooks read raw files and write them to bronze Delta tables.</li>
-            <li>Streaming ingestion uses Auto Loader, checkpointing, and incremental processing.</li>
+            <li>ADF orchestrates the scheduled and triggered flow.</li>
+            <li>Batch and stream order data lands in ADLS under landing folders.</li>
+            <li>Databricks notebooks read the raw files into a bronze layer.</li>
+            <li>Streaming ingestion uses Auto Loader and checkpointed incremental reads.</li>
           </ul>
         </div>
 
         <div class="card">
-          <h3>2. Processing</h3>
+          <h3>2. Transformation</h3>
           <ul>
-            <li>Bronze captures minimally transformed raw records.</li>
-            <li>Silver applies cleaning, validation, deduplication, and business rules.</li>
-            <li>Gold exposes daily metrics and customer or product summaries.</li>
-            <li>PySpark and Spark SQL drive the transformations.</li>
+            <li>Bronze stores raw transactional records with minimal transformations.</li>
+            <li>Silver cleans, deduplicates, validates, and enriches the data.</li>
+            <li>Gold exposes curated business-ready metrics and marts.</li>
+            <li>PySpark and Spark SQL coordinate the ELT pattern.</li>
           </ul>
         </div>
 
         <div class="card">
           <h3>3. Consumption</h3>
           <ul>
-            <li>Power BI imports curated datasets from Databricks SQL / analytical tables.</li>
-            <li>Dashboards display revenue, order count, quality rate, and data freshness.</li>
-            <li>Ops views track SLA compliance and failed-row volumes.</li>
-            <li>Monitoring queries help demonstrate production readiness.</li>
+            <li>Power BI consumes the trusted datasets and presents business dashboards.</li>
+            <li>Monitoring queries help track freshness, quality, and operational health.</li>
+            <li>DLT expectations expose failed records and quality drift.</li>
+            <li>Ops assets help with triage and demo walkthroughs.</li>
           </ul>
         </div>
       </div>
@@ -382,25 +428,131 @@
 
       <div class="table-grid">
         <div class="panel">
-          <div class="panel-header">Layered data model</div>
+          <div class="panel-header">Lakehouse layer model</div>
           <div class="panel-body">
             <ul>
-              <li><strong>Bronze:</strong> raw ingestion data retained at low transformation cost.</li>
-              <li><strong>Silver:</strong> cleaned, validated, and enriched business-ready datasets.</li>
-              <li><strong>Gold:</strong> aggregated marts for reporting and dashboard consumption.</li>
-              <li><strong>Quarantine:</strong> invalid rows are separated for review and root-cause analysis.</li>
+              <li><strong>Bronze:</strong> raw data preserved in a near-original state.</li>
+              <li><strong>Silver:</strong> cleaned and quality-checked business data.</li>
+              <li><strong>Gold:</strong> aggregated, business-facing metrics and marts.</li>
+              <li><strong>Quarantine:</strong> invalid rows are isolated for troubleshooting and reprocessing.</li>
             </ul>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panel-header">Quality and validation approach</div>
+          <div class="panel-header">Why the validation layer matters</div>
           <div class="panel-body">
             <ul>
-              <li>Required fields such as <code>order_id</code>, <code>customer_id</code>, <code>order_ts</code>, <code>quantity</code>, and <code>unit_price</code> are checked.</li>
-              <li>Quantity must be positive and whole-numbered.</li>
-              <li>Prices must be greater than zero and limited to two decimal places.</li>
-              <li>DLT expectations drop or quarantine rows that fail business validation.</li>
+              <li>Bad rows cannot be silently accepted into the curated layer.</li>
+              <li>Rules check required fields, timezone-aware timestamps, positive quantities, and valid prices.</li>
+              <li>DLT expectations and Python validation act as the first line of quality defense.</li>
+              <li>Operational teams can identify poor source data quickly instead of discovering issues in reports.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">The validation layer in <code>src/quality/rules.py</code></h2>
+      <div class="three-col">
+        <div class="card">
+          <h3><code>validate_order_record()</code></h3>
+          <p>
+            This function validates a single order dictionary and returns a structured result indicating whether the record passed
+            or failed. It enforces checks for required fields, timestamp validity, quantity constraints, and currency precision.
+          </p>
+          <ul>
+            <li>Rejects missing or blank values.</li>
+            <li>Requires valid ISO timestamps with timezone metadata.</li>
+            <li>Requires positive whole-number quantities.</li>
+            <li>Rejects non-positive or over-precise prices.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><code>split_valid_invalid()</code></h3>
+          <p>
+            This helper partitions a batch of records into pass/fail buckets. It is useful when the ingestion pipeline wants to keep
+            clean records flowing while routing bad data to quarantine or review paths.
+          </p>
+          <ul>
+            <li>Returns valid records and invalid records separately.</li>
+            <li>Makes quality enforcement easy to reason about in batch flows.</li>
+            <li>Supports clean handoff to downstream lakehouse logic.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Behavior example</h3>
+          <p>
+            The validation logic is intentionally explicit. A record is not just marked invalid generically; it receives a clear reason
+            such as <code>invalid_quantity</code>, <code>invalid_order_ts</code>, or <code>invalid_unit_price</code>.
+          </p>
+          <ul>
+            <li>Good data passes with <code>reason = "ok"</code>.</li>
+            <li>Bad data is contextualized for support and debugging.</li>
+            <li>Tests in <code>tests/test_rules.py</code> protect the current behavior.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-band">
+        In other words, the validation layer is the discipline behind the architecture: it stops noisy data from polluting the silver and gold layers.
+      </div>
+
+      <h2 class="section-title">Deployment scripts in <code>scripts/</code></h2>
+      <div class="script-grid">
+        <div class="script-card">
+          <h4>Bash deployment: <code>scripts/deploy_adf_cli.sh</code></h4>
+          <div class="code-box">export RESOURCE_GROUP="rg-adf-demo"
+export LOCATION="eastus"
+export FACTORY_NAME="adf-demo-lakehouse"
+export GIT_URL="https://github.com/&lt;your-user&gt;/&lt;repo&gt;.git"
+export GIT_BRANCH="main"
+./scripts/deploy_adf_cli.sh</div>
+          <p>
+            This script logs into Azure, creates the resource group, creates the Azure Data Factory, and provisions the linked services,
+            datasets, pipelines, and trigger definitions packaged in the repo. It is ideal for Bash-based environments and lab setups.
+          </p>
+        </div>
+
+        <div class="script-card">
+          <h4>PowerShell deployment: <code>scripts/deploy_adf_cli.ps1</code></h4>
+          <div class="code-box">$env:RESOURCE_GROUP = "rg-adf-demo"
+$env:LOCATION = "eastus"
+$env:FACTORY_NAME = "adf-demo-lakehouse"
+$env:GIT_URL = "https://github.com/&lt;your-user&gt;/&lt;repo&gt;.git"
+$env:GIT_BRANCH = "main"
+.\scripts\deploy_adf_cli.ps1</div>
+          <p>
+            This is the Windows-friendly equivalent. It performs the same core deployment work and avoids recreating the process manually in the Azure portal.
+            It is especially helpful for engineers working in PowerShell-based DevOps or local admin workflows.
+          </p>
+        </div>
+      </div>
+
+      <div class="table-grid">
+        <div class="panel">
+          <div class="panel-header">What the deployment scripts automate</div>
+          <div class="panel-body">
+            <ul>
+              <li>Validate Azure CLI login state.</li>
+              <li>Create or reuse the target resource group.</li>
+              <li>Create the Azure Data Factory if it does not exist.</li>
+              <li>Create linked services for ADLS and Databricks.</li>
+              <li>Create required datasets, pipelines, and trigger artifacts.</li>
+              <li>Optionally connect the factory to Git when a repository URL is provided.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Why this matters</div>
+          <div class="panel-body">
+            <ul>
+              <li>Deployments become repeatable and easier to explain in a demo.</li>
+              <li>Less manual setup means more attention can be paid to architecture.</li>
+              <li>These scripts sit right at the intersection of cloud infrastructure and data platform delivery.</li>
+              <li>They represent the practical first step from repo to running Azure resources.</li>
             </ul>
           </div>
         </div>
@@ -409,123 +561,86 @@
       <div class="repo-grid">
         <div class="repo-item">
           <h4>ADF assets</h4>
-          <p>
-            The <code>adf/</code> folder contains pipeline, dataset, and linked-service definitions for orchestration and
-            data movement. These templates are designed to be adapted to a real Azure subscription and storage setup.
-          </p>
+          <p>JSON pipeline and linked-service definitions under <code>adf/</code> are the config layer for the orchestration environment.</p>
         </div>
 
         <div class="repo-item">
           <h4>Databricks notebooks</h4>
-          <p>
-            The <code>databricks/notebooks/</code> folder contains batch ingestion, streaming ingestion, silver transforms,
-            and gold mart logic. These capture the actual operational flow of the demo.
-          </p>
+          <p>The <code>databricks/notebooks/</code> folder holds the actual batch, streaming, and ELT logic that moves data through bronze, silver, and gold.</p>
         </div>
 
         <div class="repo-item">
           <h4>DLT pipeline</h4>
-          <p>
-            The DLT pipeline in <code>databricks/dlt/orders_dlt_pipeline.py</code> centralizes quality expectations and
-            emits a quarantine dataset for invalid rows that violate the business rules.
-          </p>
-        </div>
-
-        <div class="repo-item">
-          <h4>Python validation layer</h4>
-          <p>
-            The <code>src/quality/rules.py</code> module defines validation logic for order records. It validates field
-            presence, timestamps, quantities, and pricing before records are considered acceptable.
-          </p>
-        </div>
-
-        <div class="repo-item">
-          <h4>Power BI artifacts</h4>
-          <p>
-            The <code>powerbi/</code> folder contains SQL import queries, DAX measures, model design guidance, and report
-            layout blueprints for business dashboarding.
-          </p>
+          <p>The DLT layer adds expectation-driven enforcement and helps demonstrate how quality issues are discovered within a production-like workflow.</p>
         </div>
 
         <div class="repo-item">
           <h4>Operational tooling</h4>
-          <p>
-            The <code>ops/</code> and <code>scripts/</code> folders include monitoring queries, runbooks, deployment helpers,
-            and sample event emission scripts to support demonstration and sustainability.
-          </p>
+          <p>Runbooks, monitoring queries, health checks, and deployment helpers make this repository demo-ready and easier to support in practice.</p>
         </div>
       </div>
 
       <div class="timeline">
         <div class="timeline-item">
-          <h4>1. Raw files land in ADLS</h4>
-          <p>Sample batch and stream order payloads are placed in the landing folders. This simulates source ingestion from external systems or event producers.</p>
+          <h4>1. Source data lands</h4>
+          <p>Sample batch and stream order files are placed into the landing zone to simulate operational source systems.</p>
         </div>
 
         <div class="timeline-item">
-          <h4>2. Batch and streaming jobs ingest into the bronze layer</h4>
-          <p>Databricks notebooks read the files and write records to Delta bronze tables, preserving the raw data and adding ingestion metadata.</p>
+          <h4>2. ADF triggers the pipeline</h4>
+          <p>ADF orchestrates the movement and coordination of the flow, turning source data into a reproducible operational process.</p>
         </div>
 
         <div class="timeline-item">
-          <h4>3. DLT enforces expectations and quarantine logic</h4>
-          <p>Rows are checked for validity before entering the silver layer. Failed rows are captured in a quarantine dataset for operational review.</p>
+          <h4>3. Databricks processes the data</h4>
+          <p>Bronze, silver, and gold transformations happen in Databricks, with quality rules applied between layers.</p>
         </div>
 
         <div class="timeline-item">
-          <h4>4. Silver and gold tables create analytical products</h4>
-          <p>Curated tables expose cleaned orders, daily sales summaries, and customer metrics. These are designed for reporting and downstream consumption.</p>
+          <h4>4. Monitoring and observability surface issues</h4>
+          <p>DLT expectations, runbooks, and queries make it possible to spot quality, freshness, and failure patterns early.</p>
         </div>
 
         <div class="timeline-item">
-          <h4>5. Power BI delivers a business story</h4>
-          <p>Dashboard visuals summarize revenue, order volume, quality pass rate, and freshness. This provides an executive summary and operations visibility.</p>
+          <h4>5. Power BI turns data into decisions</h4>
+          <p>Business users and stakeholders can consume curated metrics in a form that is understandable and decision-oriented.</p>
         </div>
       </div>
 
-      <h2 class="section-title" style="margin-top: 26px;">What makes this project demo-ready</h2>
+      <h2 class="section-title" style="margin-top: 26px;">Why this repo is strong for technical storytelling</h2>
       <div class="three-col">
         <div class="card">
-          <h3>Production mindset</h3>
-          <p>
-            The design incorporates raw ingestion, validation, quarantine, monitored freshness, and business marts—common
-            qualities in real lakehouse patterns used by enterprises.
-          </p>
+          <h3>Production patterns</h3>
+          <p>It includes ingestion, validation, transformation, observability, and reporting in a single coherent flow.</p>
         </div>
 
         <div class="card">
-          <h3>Operational readiness</h3>
-          <p>
-            Monitoring files, DLT expectation checks, runbooks, and sample deployment scripts help illustrate how a platform
-            is operated after it goes live.
-          </p>
+          <h3>Operational realism</h3>
+          <p>It does not stop at a toy pipeline. It demonstrates the operating model needed to run a data platform responsibly.</p>
         </div>
 
         <div class="card">
           <h3>Interview value</h3>
-          <p>
-            This repo is helpful in technical interviews because it connects architecture, data quality, ELT, orchestration,
-            and reporting in a single end-to-end example.
-          </p>
+          <p>It connects architecture, data quality, orchestration, lakehouse design, and business analytics into one story.</p>
         </div>
       </div>
 
       <div class="badges">
         <span class="tag">ADF</span>
-        <span class="tag">Azure ADLS</span>
+        <span class="tag">ADLS</span>
         <span class="tag">Databricks</span>
         <span class="tag">Delta Lake</span>
-        <span class="tag">Delta Live Tables</span>
+        <span class="tag">DLT</span>
         <span class="tag">PySpark</span>
         <span class="tag">Power BI</span>
-        <span class="tag">DAX</span>
-        <span class="tag">Quality Gates</span>
+        <span class="tag">Data Quality</span>
         <span class="tag">Monitoring</span>
+        <span class="tag">Cloud Deployment</span>
       </div>
     </div>
 
     <div class="footer">
-      Demo summary: raw data enters via ADF and ADLS, is transformed in Databricks, quality-checked in DLT, and consumed through Power BI dashboards for business insight.<br /><br />
+      Demo summary: raw data enters via ADF and ADLS, is validated and transformed in Databricks, quality-checked in DLT, and consumed through Power BI dashboards for business insight.<br /><br />
       GitHub: <a href="https://github.com/ibis-equity/adf_databricks" target="_blank" rel="noopener noreferrer" style="color: var(--azure); text-decoration: underline;">https://github.com/ibis-equity/adf_databricks</a>
     </div>
   </div>
