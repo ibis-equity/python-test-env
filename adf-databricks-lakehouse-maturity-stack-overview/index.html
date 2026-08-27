@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADF + Databricks Lakehouse | Maturity Stack Overview</title>
+  <title>Databricks Maturity Stack | ADF + Databricks Demo</title>
   <style>
     :root {
       --navy: #0f172a;
@@ -28,38 +28,46 @@
     }
 
     .page {
-      max-width: 1280px;
-      margin: 28px auto;
+      max-width: 1200px;
+      margin: 32px auto;
       background: var(--white);
       border: 1px solid var(--line);
       border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
     }
 
     .titlebar {
       background: linear-gradient(135deg, var(--navy), #102d53 55%, #1a4380);
       color: var(--white);
-      padding: 28px 30px 24px;
       text-align: center;
+      padding: 28px 30px 24px;
     }
 
     .titlebar h1 {
       margin: 0;
-      font-size: clamp(2.1rem, 3vw, 3.4rem);
-      line-height: 1.1;
+      font-size: clamp(2rem, 3vw, 3rem);
     }
 
     .subtitle {
       margin-top: 10px;
       font-size: 1.08rem;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.88);
       font-weight: 500;
+    }
+
+    .github-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #dfeeff;
+      text-decoration: underline;
+      font-weight: 600;
+      font-size: 0.95rem;
     }
 
     .accent-line {
       height: 5px;
-      background: linear-gradient(90deg, var(--azure), #79b7f5, #dfeeff);
+      background: linear-gradient(90deg, var(--azure), #5fa9eb, #dceeff);
     }
 
     .content {
@@ -68,159 +76,105 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 22px;
-      margin-bottom: 28px;
+      align-items: start;
+      margin-bottom: 24px;
     }
 
-    .intro, .panel, .card, .maturity-item, .repo-item {
+    .panel {
       background: var(--light);
       border: 1px solid var(--line);
-      border-radius: 14px;
+      border-radius: 16px;
+      padding: 20px 22px;
     }
 
-    .intro, .panel {
-      padding: 22px;
-    }
-
-    .intro h2, .panel h2, .section-title, .maturity-item h3, .repo-item h4, .card h3 {
+    .panel h2, .panel h3 {
       margin: 0 0 12px;
       color: var(--navy);
     }
 
-    .intro p, .panel p, .card p, .card li, .repository p, .maturity-item p, .maturity-item li, .repo-item p {
-      color: var(--text);
+    .panel p, .panel li {
       line-height: 1.7;
+      color: var(--text);
       font-size: 0.98rem;
     }
 
-    .intro ul, .panel ul, .card ul, .maturity-item ul, .repo-item ul {
+    .panel ul {
       margin: 0;
       padding-left: 18px;
-      line-height: 1.8;
     }
 
-    .image-panel {
+    .image-wrap {
       background: var(--white);
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 12px;
+      padding: 10px;
       text-align: center;
     }
 
-    .image-panel img {
+    .image-wrap img {
       display: block;
       width: 100%;
       max-width: 100%;
       height: auto;
       border-radius: 12px;
       border: 1px solid var(--line);
-      background: #f8fbff;
+      background: #f9fbff;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: zoom-in;
+    }
+
+    .image-wrap img:hover {
+      transform: scale(1.06);
+      box-shadow: 0 20px 30px rgba(15, 23, 42, 0.14);
     }
 
     .section-title {
-      font-size: 1.6rem;
-      margin: 26px 0 14px;
+      margin-top: 28px;
+      margin-bottom: 14px;
+      color: var(--navy);
+      font-size: 1.55rem;
     }
 
-    .three-col, .repo-grid, .stack-grid {
+    .maturity-grid {
       display: grid;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .three-col {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .stack-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .card {
-      padding: 18px 16px 14px;
-      min-height: 260px;
-    }
-
-    .card h3 {
-      font-size: 1.15rem;
-      text-align: center;
-    }
-
-    .flow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 26px 0 20px;
-      padding: 18px 12px;
-      border-radius: 14px;
-      background: #f5faff;
-      border: 1px solid var(--line);
-    }
-
-    .step {
-      background: var(--navy);
-      color: var(--white);
-      padding: 12px 18px;
-      border-radius: 10px;
-      min-width: 185px;
-      text-align: center;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .step.alt {
-      background: var(--azure);
-    }
-
-    .arrow {
-      color: var(--azure);
-      font-weight: 700;
-      font-size: 1.7rem;
-      line-height: 1;
+      gap: 18px;
+      margin-top: 12px;
     }
 
     .maturity-item {
+      background: var(--light);
+      border: 1px solid var(--line);
+      border-radius: 14px;
       padding: 18px 16px;
     }
 
-    .repo-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin-top: 20px;
-    }
-
-    .repo-item {
-      padding: 14px 14px 10px;
-    }
-
-    .repo-item h4 {
-      font-size: 1.03rem;
-    }
-
-    .repo-item p {
-      margin: 0;
-      font-size: 0.92rem;
-    }
-
-    .info-band {
-      margin-top: 22px;
-      background: linear-gradient(135deg, #dfeeff, #f6fbff);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 16px 18px;
+    .maturity-item h3 {
+      margin: 0 0 10px;
       color: var(--navy);
-      font-weight: 600;
+      font-size: 1.08rem;
+    }
+
+    .maturity-item p, .maturity-item li {
+      margin: 0;
       line-height: 1.7;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .maturity-item ul {
+      margin: 0;
+      padding-left: 18px;
     }
 
     .badge-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      justify-content: center;
       margin-top: 22px;
+      justify-content: center;
     }
 
     .tag {
@@ -239,20 +193,12 @@
       text-align: center;
       color: var(--navy);
       font-weight: 700;
-      padding: 20px 18px 26px;
+      padding: 18px 18px 24px;
     }
 
-    @media (max-width: 980px) {
-      .hero, .three-col, .stack-grid, .repo-grid {
+    @media (max-width: 920px) {
+      .hero, .maturity-grid {
         grid-template-columns: 1fr;
-      }
-
-      .flow {
-        flex-direction: column;
-      }
-
-      .arrow {
-        transform: rotate(90deg);
       }
     }
   </style>
@@ -260,195 +206,115 @@
 <body>
   <div class="page">
     <div class="titlebar">
-      <h1>ADF + Databricks + Delta Lake Demo</h1>
-      <div class="subtitle">A lakehouse implementation that maps to the Databricks Maturity Stack</div>
+      <h1>Databricks Maturity Stack</h1>
+      <div class="subtitle">How this project fits into a lakehouse maturity journey</div>
+      <a class="github-link" href="https://github.com/ibis-equity/adf_databricks" target="_blank" rel="noopener noreferrer">
+        github.com/ibis-equity/adf_databricks
+      </a>
+      <div style="margin-top: 10px; font-size: 0.92rem; color: rgba(255,255,255,0.92); font-weight: 600;">
+        ADF + Databricks + Delta Lake Demo: an example of growing from platform enablement to operationalized lakehouse maturity.
+      </div>
     </div>
     <div class="accent-line"></div>
 
     <div class="content">
       <div class="hero">
-        <div class="intro">
-          <h2>Project overview</h2>
+        <div class="panel">
+          <h2>High-level view</h2>
           <p>
-            This project is a full-stack lakehouse demonstration designed to show how raw order data can move from source systems into a trusted,
-            governed analytics platform. It combines Azure Data Factory, Azure Data Lake Storage, Databricks, Delta Lake, Delta Live Tables,
-            and Power BI to model a realistic enterprise data workflow where ingestion, transformation, quality enforcement, and reporting are all connected.
+            This project demonstrates a mature lakehouse implementation that moves beyond simple data movement into the stages
+            of ingestion, engineering, quality enforcement, and analytics. It reflects the Databricks maturity journey by showing
+            how raw operational data can be landed in cloud storage, transformed into curated business datasets, quality-checked,
+            and exposed to stakeholders through reporting and monitoring.
           </p>
           <p>
-            More importantly, it reflects a maturity journey rather than a simple prototype. The repository demonstrates how a team can move from basic
-            platform setup and ingestion into data engineering, quality governance, analytics, and operations—precisely the stages captured by the Databricks Maturity Stack.
+            In Databricks maturity terms, this repo sits in the middle-to-later stages of the stack: platform foundation,
+            data engineering, governance, analytics, and operational readiness. It is not only a proof-of-concept pipeline; it is a
+            practical blueprint for how a modern data platform can be designed and operated responsibly.
           </p>
-          <ul>
-            <li>Capture data from batch and streaming sources.</li>
-            <li>Validate records before they enter trusted analytical layers.</li>
-            <li>Transform raw data into bronze, silver, and gold datasets.</li>
-            <li>Drive business reporting with curated metrics and dashboards.</li>
-            <li>Support monitoring, deployment, and operational readiness.</li>
-          </ul>
         </div>
 
-        <div class="image-panel">
-          <img src="file:///C:/Users/desha/Downloads/Databricks%20Maturity%20Stack.gif" alt="Databricks Maturity Stack" />
+        <div class="image-wrap">
+          <img src="https://ibis-equity.github.io/python-test-env/adf-databricks-lakehouse-maturity-stack-overview/Databricks%20Maturity%20Stack.gif" alt="Databricks Maturity Stack" />
         </div>
       </div>
 
-      <h2 class="section-title">Core architecture</h2>
-      <div class="three-col">
-        <div class="card">
-          <h3>1. Ingestion</h3>
-          <ul>
-            <li>ADF orchestrates batch and streaming ingestion.</li>
-            <li>Files land in ADLS and are processed by Databricks notebooks.</li>
-            <li>Bronze tables preserve raw records for traceability and replay.</li>
-          </ul>
-        </div>
+      <h2 class="section-title">How this repo maps to the Databricks Maturity Stack</h2>
 
-        <div class="card">
-          <h3>2. Transformation</h3>
-          <ul>
-            <li>Silver cleans, validates, and normalizes the data.</li>
-            <li>Gold creates business-ready aggregations and curated marts.</li>
-            <li>PySpark and Spark SQL power the ELT workflow.</li>
-          </ul>
-        </div>
-
-        <div class="card">
-          <h3>3. Consumption</h3>
-          <ul>
-            <li>Power BI presents trusted metrics for decision-makers.</li>
-            <li>Monitoring views and runbooks support operational oversight.</li>
-            <li>Quality rules protect the accuracy of downstream reporting.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="flow">
-        <div class="step">ADF Orchestration</div>
-        <div class="arrow">→</div>
-        <div class="step alt">Landing Zone</div>
-        <div class="arrow">→</div>
-        <div class="step">Databricks Bronze</div>
-        <div class="arrow">→</div>
-        <div class="step alt">Silver + Quality Rules</div>
-        <div class="arrow">→</div>
-        <div class="step">Gold + Power BI</div>
-      </div>
-
-      <h2 class="section-title">How this project fits the Databricks Maturity Stack</h2>
-      <div class="stack-grid">
+      <div class="maturity-grid">
         <div class="maturity-item">
-          <h3>Foundation / Platform Setup</h3>
+          <h3>1. Foundation / platform setup</h3>
           <p>
-            The repo establishes the cloud and platform basics: Azure Data Factory for orchestration, ADLS Gen2 for storage, Databricks notebooks for compute,
-            Docker/Kubernetes packaging, and GitHub Actions for deployment automation. This is the base layer of the maturity stack.
+            The project establishes the cloud and platform basics required for a lakehouse: Azure Data Factory for orchestration,
+            ADLS Gen2 for storage, Databricks for compute, Docker/Kubernetes for packaging, and GitHub Actions for automation.
           </p>
         </div>
 
         <div class="maturity-item">
-          <h3>Data Ingestion and Integration</h3>
+          <h3>2. Data ingestion and integration</h3>
           <p>
-            The <code>adf/</code> assets, notebook ingestion patterns, and raw landing layout reflect the data integration stage. The platform is able to absorb data
-            from both batch and event-driven sources and bring it into a governed environment.
+            The repo clearly shows integration patterns through the <code>adf/</code> assets and Databricks notebooks for batch and streaming ingestion.
+            Raw files and event data are landed and ingested into the platform in a repeatable way.
           </p>
         </div>
 
         <div class="maturity-item">
-          <h3>Data Engineering and Transformation</h3>
+          <h3>3. Data engineering and lakehouse patterns</h3>
           <p>
-            Bronze, silver, and gold layers clearly show the transformation maturity of the architecture. This is where raw data becomes curated, reusable,
-            and analytically useful data products.
+            The bronze/silver/gold layering is a direct representation of mature lakehouse engineering. The data flows from raw ingestion,
+            to cleaned validated data, to aggregated business-ready outputs.
           </p>
         </div>
 
         <div class="maturity-item">
-          <h3>Data Quality and Governance</h3>
+          <h3>4. Data quality and governance</h3>
           <p>
-            The validation layer in <code>src/quality/rules.py</code> is one of the most important maturity signals in this project. It validates required fields,
-            timestamps, quantities, and pricing rules, and DLT expectations add another layer of quality governance before data reaches the curated layer.
+            This is one of the strongest maturity signals in the project. The validation logic in <code>src/quality/rules.py</code> checks for
+            required fields, timestamps, valid quantities, and valid pricing. DLT expectations and quarantine-style handling reinforce
+            quality and governance discipline.
           </p>
         </div>
 
         <div class="maturity-item">
-          <h3>Analytics and Consumption</h3>
+          <h3>5. Analytics and self-service consumption</h3>
           <p>
-            The gold layer and Power BI assets represent the analytics maturity layer. The project doesn’t just transform data; it exposes it to business users,
-            dashboards, and operational monitoring in a way that is understandable and decision-ready.
+            The gold layer and Power BI assets show that the platform is not only processing data, but delivering business value through curated,
+            decision-ready datasets. This is the analytics maturity layer: trusted data consumed by dashboards and operational views.
           </p>
         </div>
 
         <div class="maturity-item">
-          <h3>Operational Maturity</h3>
+          <h3>6. Operational maturity</h3>
           <p>
-            The inclusion of runbooks, monitoring assets, health checks, and deployment scripts shows a platform that is designed to be supported in real operation,
-            not simply executed once for a demo. This is the stage where a project begins to behave like a production-ready lakehouse platform.
+            The repo includes runbooks, monitoring assets, health checks, deployment scripts, and CI/CD workflows. These are hallmark traits of a
+            platform that is ready to run and support, not just a prototype that executes once.
           </p>
         </div>
       </div>
 
-      <div class="info-band">
-        In maturity-stack language, this repo sits in the middle-to-later stages of the journey: platform foundation, ingestion, data engineering,
-        governance, analytics, and operational readiness. It is not just a pipeline demo; it is a realistic representation of how a team matures a lakehouse architecture into a useful enterprise platform.
-      </div>
-
-      <h2 class="section-title">Repository highlights</h2>
-      <div class="repo-grid">
-        <div class="repo-item">
-          <h4>ADF assets</h4>
-          <p>The <code>adf/</code> folder contains the orchestration layer—pipeline, dataset, linked-service, and trigger definitions used to automate movement and processing.</p>
-        </div>
-
-        <div class="repo-item">
-          <h4>Databricks notebooks</h4>
-          <p>The core transformation logic is in <code>databricks/notebooks/</code>, covering batch ingestion, streaming ingestion, and downstream business logic.</p>
-        </div>
-
-        <div class="repo-item">
-          <h4>Quality rules</h4>
-          <p><code>src/quality/rules.py</code> formalizes data quality validation, giving the project a serious governance foundation instead of a purely technical ETL flow.</p>
-        </div>
-
-        <div class="repo-item">
-          <h4>Power BI and metrics</h4>
-          <p>The <code>powerbi/</code> artifacts move the project from raw engineering to business insight by exposing trusted data products for dashboards and KPIs.</p>
-        </div>
-
-        <div class="repo-item">
-          <h4>Operational tooling</h4>
-          <p><code>ops/</code>, runbooks, deployment scripts, and CI/CD workflows show that this project is designed to be run, supported, and explained in a real environment.</p>
-        </div>
-
-        <div class="repo-item">
-          <h4>Testing</h4>
-          <p><code>tests/test_rules.py</code> ensures the data quality logic is codified and actively validated, which is especially important at higher maturity levels.</p>
-        </div>
-      </div>
-
-      <h2 class="section-title">Why this matters to a potential employer</h2>
-      <div class="panel">
+      <div class="panel" style="margin-top: 24px;">
+        <h3>Overall maturity assessment</h3>
         <p>
-          This project demonstrates that I can think beyond simple pipelines and work across the full lakehouse lifecycle: platform setup, data ingestion,
-          engineering, quality enforcement, analytics, and operational support. It shows practical understanding of how modern data platforms are built and
-          operated in real organizations, which is exactly the type of thinking employers look for in data engineering, analytics engineering, and platform roles.
-        </p>
-        <p>
-          In hiring terms, the project signals three things: I understand end-to-end data architecture, I value data quality and governance, and I can connect technical implementation to business outcomes.
+          This repository sits at a solid intermediate-to-advanced point on the Databricks Maturity Stack. It demonstrates the foundational
+          platform, ingestion pipelines, lakehouse transformations, data quality controls, and reporting layer expected in a real enterprise setup.
+          It does not yet fully include advanced ML/AI or deep productization patterns, but it clearly represents the maturity range where data
+          engineering is operationalized and trusted enough to support business analytics at scale.
         </p>
       </div>
 
       <div class="badge-row">
-        <span class="tag">Lakehouse Architecture</span>
-        <span class="tag">Data Engineering</span>
+        <span class="tag">Platform Foundation</span>
+        <span class="tag">Ingestion</span>
+        <span class="tag">Lakehouse Engineering</span>
         <span class="tag">Data Quality</span>
         <span class="tag">Governance</span>
-        <span class="tag">Databricks</span>
-        <span class="tag">Azure</span>
-        <span class="tag">Power BI</span>
+        <span class="tag">Analytics</span>
         <span class="tag">Operations</span>
       </div>
     </div>
 
     <div class="footer">
-      This project reflects a modern lakehouse maturity journey: from platform enablement to trusted business analytics and operational readiness.
+      ADF + Databricks + Delta Lake Demo: an example of growing from platform enablement to operationalized lakehouse maturity.
     </div>
   </div>
 </body>
